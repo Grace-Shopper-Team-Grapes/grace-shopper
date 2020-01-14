@@ -23,29 +23,32 @@ const Product = db.define('product', {
     allowNull: false
   },
   imageUrl: {
-      type: Sequelize.STRING,
-      defaultValue: 'default-product.jpeg'
+    type: Sequelize.STRING,
+    defaultValue: 'default-product.jpeg'
   },
   description: {
-      type: Sequelize.TEXT
+    type: Sequelize.TEXT
   },
   inStock: {
-      type: Sequelize.BOOLEAN,
-      defaultValue: 0
+    type: Sequelize.BOOLEAN,
+    defaultValue: 0
   },
   isPublished: {
-      type: Sequelize.BOOLEAN,
-      defaultValue: 0
+    type: Sequelize.BOOLEAN,
+    defaultValue: 0
   }
 })
 
 Product.beforeValidate(product => {
-    /*
-     * Generate slug
-     */
-    if (!product.slug) {
-      product.slug = product.name.replace(/\s/g, "_").replace(/\W/g, "").toLowerCase();
-    }
-  });
+  /*
+   * Generate slug
+   */
+  if (!product.slug) {
+    product.slug = product.name
+      .replace(/\s/g, '_')
+      .replace(/\W/g, '')
+      .toLowerCase()
+  }
+})
 
 module.exports = Product
