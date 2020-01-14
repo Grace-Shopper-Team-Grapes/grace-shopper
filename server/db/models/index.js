@@ -39,5 +39,12 @@ Address.belongsTo(Order);
  * instead of: const User = require('../db/models/user')
  */
 module.exports = {
-  User
+  User,
+  Address,
+  Order,
+  OrderLineItem,
+  Product,
+  OrderStatus,
+  ShippingMethod,
+  Category
 };
