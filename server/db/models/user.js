@@ -27,29 +27,19 @@ const User = db.define('user', {
     }
   },
   phone: {
-    type: Sequelize.INTEGER,
-    unique: true,
+    type: Sequelize.STRING,
     allowNull: false,
     validate: {
       notEmpty: true,
-      isNumeric: true,
-      max: 10,
-      min: 10
+      isNumeric: true, // May cause a problem.
+      len: [9, 11]
     }
   },
   defaultShipping: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate: {
-      notEmpty: true
-    }
+    type: Sequelize.STRING
   },
   defaultBilling: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate: {
-      notEmpty: true
-    }
+    type: Sequelize.STRING
   },
   password: {
     type: Sequelize.STRING,
@@ -107,7 +97,7 @@ const setSaltAndPassword = user => {
 }
 
 const validatePhone = user => {
-  user.phone = +user.phone.replace(/[-]/g, '')
+  user.phone = +user.phone.replace(/\D/g, '')
 }
 
 User.beforeValidate(validatePhone)

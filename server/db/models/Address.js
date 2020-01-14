@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize')
 const db = require('../db')
 
-const Address = db.define('Address', {
+const Address = db.define('address', {
   street1: {
     type: Sequelize.STRING,
     allowNull: false,
@@ -31,18 +31,13 @@ const Address = db.define('Address', {
     }
   },
   zip: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.STRING,
     allowNull: false,
     validate: {
       notEmpty: true,
-      max: 5,
-      min: 5
+      len: [4, 6]
     }
   }
 })
 
-const validateZip = address => {
-  address.zip = +address.zip
-}
-
-Address.beforeValidate(validateZip)
+module.exports = Address
