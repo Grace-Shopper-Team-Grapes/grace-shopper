@@ -1,4 +1,28 @@
-const User = require('./user')
+const User = require('./User');
+const Address = require('./Address');
+const Order = require('./Order');
+const OrderLineItem = require('./OrderLineItem');
+const Product = require('./Product');
+const OrderStatus = require('./OrderStatus');
+const ShippingMethod = require('./ShippingMethod');
+const Category = require('./Category');
+
+User.hasMany(Order);
+User.hasMany(Address);
+//Product.belongsToMany(OrderLineItem);
+Category.hasMany(Product);
+Order.belongsTo(User);
+Order.hasOne(Address);
+Order.hasOne(OrderStatus);
+Order.hasMany(OrderLineItem);
+Order.hasOne(ShippingMethod);
+OrderLineItem.hasOne(Product);
+OrderLineItem.belongsTo(Order);
+Order.hasOne(Product);
+OrderStatus.belongsTo(Order);
+ShippingMethod.belongsTo(Order);
+Address.belongsTo(User);
+Address.belongsTo(Order);
 
 /**
  * If we had any associations to make, this would be a great place to put them!
@@ -15,4 +39,4 @@ const User = require('./user')
  */
 module.exports = {
   User
-}
+};
