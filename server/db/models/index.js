@@ -8,7 +8,8 @@ const ShippingMethod = require('./ShippingMethod');
 const Category = require('./Category');
 
 User.hasMany(Order);
-User.hasMany(Address);
+User.hasMany(Address, {as: 'Shipping'});
+User.hasMany(Address, {as: 'Billing'});
 //Product.belongsToMany(OrderLineItem);
 Category.hasMany(Product);
 Order.belongsTo(User);
