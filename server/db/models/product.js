@@ -4,7 +4,8 @@ const db = require('../db')
 const Product = db.define('product', {
   name: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
+    notEmpty: true
   },
   slug: {
     type: Sequelize.STRING,
@@ -45,7 +46,7 @@ Product.beforeValidate(product => {
    */
   if (!product.slug) {
     product.slug = product.name
-      .replace(/\s/g, '_')
+      .replace(/\s/g, '-')
       .replace(/\W/g, '')
       .toLowerCase()
   }

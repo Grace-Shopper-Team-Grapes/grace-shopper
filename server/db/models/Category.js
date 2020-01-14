@@ -4,7 +4,8 @@ const db = require('../db');
 const Category = db.define('category', {
   name: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
+    notEmpty: true
   },
   slug: {
     type: Sequelize.STRING,
@@ -31,7 +32,7 @@ Category.beforeValidate(category => {
    */
   if (!category.slug) {
     category.slug = category.name
-      .replace(/\s/g, '_')
+      .replace(/\s/g, '-')
       .replace(/\W/g, '')
       .toLowerCase()
   }
