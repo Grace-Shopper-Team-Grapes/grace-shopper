@@ -3,10 +3,43 @@ const Sequelize = require('sequelize')
 const db = require('../db')
 
 const User = db.define('user', {
+  firstName: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: true
+    }
+  },
+  lastName: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: true
+    }
+  },
   email: {
     type: Sequelize.STRING,
     unique: true,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      notEmpty: true,
+      isEmail: true
+    }
+  },
+  phone: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: true,
+      isNumeric: true, // May cause a problem.
+      len: [9, 11]
+    }
+  },
+  defaultShipping: {
+    type: Sequelize.STRING
+  },
+  defaultBilling: {
+    type: Sequelize.STRING
   },
   password: {
     type: Sequelize.STRING,
@@ -63,6 +96,11 @@ const setSaltAndPassword = user => {
   }
 }
 
+const validatePhone = user => {
+  user.phone = +user.phone.replace(/\D/g, '')
+}
+
+User.beforeValidate(validatePhone)
 User.beforeCreate(setSaltAndPassword)
 User.beforeUpdate(setSaltAndPassword)
 User.beforeBulkCreate(users => {
