@@ -35,8 +35,37 @@ const User = db.define('user', {
       len: [9, 11]
     }
   },
-  address: {
-    type: Sequelize.TEXT
+  street1: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: true
+    }
+  },
+  street2: {
+    type: Sequelize.STRING
+  },
+  city: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: true
+    }
+  },
+  state: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: true
+    }
+  },
+  zip: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: true,
+      len: [4, 6]
+    }
   },
   password: {
     type: Sequelize.STRING,
