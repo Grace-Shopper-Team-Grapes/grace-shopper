@@ -30,10 +30,6 @@ const Product = db.define('product', {
   description: {
     type: Sequelize.TEXT
   },
-  inStock: {
-    type: Sequelize.BOOLEAN,
-    defaultValue: false
-  },
   isPublished: {
     type: Sequelize.BOOLEAN,
     defaultValue: false
