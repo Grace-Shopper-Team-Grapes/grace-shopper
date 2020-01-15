@@ -2,7 +2,7 @@ module.exports = [
   {
     // Red Wine, in stock and published
     name: 'Cabernet Sauvignon',
-    slug: 'Cabernet-Sauvignon',
+    slug: 'cabernet-sauvignon',
     price: 29.99,
     inventory: 17,
     imageUrl:
@@ -15,7 +15,7 @@ module.exports = [
   {
     // Red Wine, not in stock and published
     name: 'Syrah',
-    slug: 'Syrah',
+    slug: 'syrah',
     price: 9.99,
     inventory: 0,
     imageUrl:
@@ -28,7 +28,7 @@ module.exports = [
   {
     // Red Wine, not in stock and not published
     name: 'Zinfandel',
-    slug: 'Zinfandel',
+    slug: 'zinfandel',
     price: 0,
     inventory: 0,
     imageUrl:
@@ -41,7 +41,7 @@ module.exports = [
   {
     // White Wine, in stock but not published
     name: 'Chardonnay',
-    slug: 'Chardonnay',
+    slug: 'chardonnay',
     price: 10.0,
     inventory: 10,
     imageUrl:

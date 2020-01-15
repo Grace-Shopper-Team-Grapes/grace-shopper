@@ -35,6 +35,8 @@ Category.beforeValidate(category => {
       .replace(/\s/g, '-')
       .replace(/\W/g, '')
       .toLowerCase();
+  } else {
+    category.slug = category.slug.toLowerCase();
   }
 });
 
