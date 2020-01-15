@@ -13,7 +13,7 @@ User.hasMany(Address, {as: 'Billing'});
 //Product.belongsToMany(OrderLineItem);
 Category.hasMany(Product);
 Order.belongsTo(User);
-Order.hasOne(Address);
+Order.belongsTo(Address);
 Order.hasOne(OrderStatus);
 Order.hasMany(OrderLineItem);
 Order.hasOne(ShippingMethod);
@@ -23,7 +23,7 @@ Order.hasOne(Product);
 OrderStatus.belongsTo(Order);
 ShippingMethod.belongsTo(Order);
 Address.belongsTo(User);
-Address.belongsTo(Order);
+// Address.belongsTo(Order);
 //
 /**
  * If we had any associations to make, this would be a great place to put them!
