@@ -49,6 +49,8 @@ Product.beforeValidate(product => {
       .replace(/\s/g, '-')
       .replace(/\W/g, '')
       .toLowerCase();
+  } else {
+    product.slug = product.slug.toLowerCase();
   }
 });
 
