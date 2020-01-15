@@ -4,7 +4,6 @@ const Order = require('./Order');
 const OrderLineItem = require('./OrderLineItem');
 const Product = require('./Product');
 const OrderStatus = require('./OrderStatus');
-const ShippingMethod = require('./ShippingMethod');
 const Category = require('./Category');
 
 // One-to-One
@@ -12,7 +11,6 @@ Order.belongsTo(User);
 Order.belongsTo(Address);
 Order.hasOne(OrderStatus);
 OrderStatus.belongsTo(Order);
-Order.belongsTo(ShippingMethod);
 
 // One-to-Many
 User.hasMany(Order);
@@ -46,6 +44,5 @@ module.exports = {
   OrderLineItem,
   Product,
   OrderStatus,
-  ShippingMethod,
   Category
 };
