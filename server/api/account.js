@@ -38,12 +38,13 @@ router.put('/:id', async (req, res, next) => {
     );
     //if we choose to send back updated User with new
     //phone number
-    // const specificUser = await User.findById(req.params.id);
+    // const specificUser = await User.findByPk(req.params.id);
     // if (updatedStatus === 0) res.sendStatus(500);
     // else {
-    //   res.json(specificUser);
+    //   res.json(specificUser).status(202);
     // }
-    if (updatedStatus) res.sendStatus(200);
+    if (updatedStatus === 0) res.sendStatus(500);
+    else res.sendStatus(204);
   } catch (error) {
     next(error);
   }
