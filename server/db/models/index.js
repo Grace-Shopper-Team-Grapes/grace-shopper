@@ -7,23 +7,24 @@ const OrderStatus = require('./OrderStatus');
 const ShippingMethod = require('./ShippingMethod');
 const Category = require('./Category');
 
-User.hasMany(Order);
-User.hasMany(Address, {as: 'Shipping'});
-User.hasMany(Address, {as: 'Billing'});
-//Product.belongsToMany(OrderLineItem);
-Category.hasMany(Product);
+// One-to-One
 Order.belongsTo(User);
 Order.belongsTo(Address);
 Order.hasOne(OrderStatus);
-Order.hasMany(OrderLineItem);
-Order.hasOne(ShippingMethod);
-OrderLineItem.hasOne(Product);
-OrderLineItem.belongsTo(Order);
-Order.hasOne(Product);
 OrderStatus.belongsTo(Order);
-ShippingMethod.belongsTo(Order);
-Address.belongsTo(User);
-// Address.belongsTo(Order);
+Order.belongsTo(ShippingMethod);
+
+// One-to-Many
+User.hasMany(Order);
+User.belongsTo(Address, {as: 'defaultShipping'});
+User.belongsTo(Address, {as: 'defaultBilling'});
+
+// Many-to-Many
+Product.belongsToMany(Category, {through: 'CategoryProducts'});
+Category.belongsToMany(Product, {through: 'CategoryProducts'});
+Order.belongsToMany(Product, {through: OrderLineItem});
+Product.belongsToMany(Order, {through: OrderLineItem});
+
 //
 /**
  * If we had any associations to make, this would be a great place to put them!
