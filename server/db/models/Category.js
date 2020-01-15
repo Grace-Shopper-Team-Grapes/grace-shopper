@@ -14,7 +14,7 @@ const Category = db.define('category', {
     unique: true
   },
   imageUrl: {
-    type: Sequelize.STRING,
+    type: Sequelize.TEXT,
     defaultValue: 'default-category.jpeg'
   },
   description: {
