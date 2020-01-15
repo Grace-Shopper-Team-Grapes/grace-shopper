@@ -1,0 +1,37 @@
+// FOR GRAPES
+curl -i -X PUT -H 'Content-Type: application/json' -d '{
+    "firstName" : "Jim",
+    "lastName":"Bob",
+    "email":"jim.bob@gmail.com",
+    "phone":"9999999999",
+    "password":"123",
+    "googleId":"bobo"} ' http://localhost:8080/api/account/1
+
+//FOR REFERENCE
+
+/* for testing post:
+curl -i -X POST -H 'Content-Type: application/json' -d '{"name":"bookstore", "address":"5555555", "description":"so good"}' http://localhost:1337/api/campuses
+*/
+/* for testing delete:
+curl -X DELETE http://localhost:1337/api/campuses/1
+*/
+
+
+// curl -i -X POST -H 'Content-Type: application/json' -d '{"firstName":"monk", "lastName":"momomomomom", "email":"wow@gmail.com", "imageUrl":"www.google.com", "gpa": "1.5", "campusId": "1"} ' http://localhost:1337/api/students
+
+
+
+
+
+
+
+/* for testing delete:
+curl -X DELETE http://localhost:1337/api/students/9
+*/
+
+/*
+for updating:
+
+
+
+*/
