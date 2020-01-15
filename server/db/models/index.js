@@ -1,15 +1,27 @@
 const User = require('./User');
 const Address = require('./Address');
 const Order = require('./Order');
-const OrderLineItem = require('./OrderLineItem');
+const OrderProduct = require('./OrderProduct');
 const Product = require('./Product');
 const OrderStatus = require('./OrderStatus');
 const Category = require('./Category');
+
+User.hasMany(Order);
+User.hasMany(Address, {as: 'Shipping'});
+User.hasMany(Address, {as: 'Billing'});
+//Product.belongsToMany(OrderProduct);
+Category.hasMany(Product);
 
 // One-to-One
 Order.belongsTo(User);
 Order.belongsTo(Address);
 Order.hasOne(OrderStatus);
+Order.hasMany(OrderProduct);
+Order.hasOne(ShippingMethod);
+OrderProduct.hasOne(Product);
+OrderProduct.belongsTo(Order);
+Order.hasOne(Product);
+
 OrderStatus.belongsTo(Order);
 
 // One-to-Many
@@ -41,7 +53,7 @@ module.exports = {
   User,
   Address,
   Order,
-  OrderLineItem,
+  OrderProduct,
   Product,
   OrderStatus,
   Category
