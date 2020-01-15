@@ -22,7 +22,7 @@ const Category = db.define('category', {
   },
   isPublished: {
     type: Sequelize.BOOLEAN,
-    defaultValue: 0
+    defaultValue: false
   }
 });
 
@@ -34,7 +34,7 @@ Category.beforeValidate(category => {
     category.slug = category.name
       .replace(/\s/g, '-')
       .replace(/\W/g, '')
-      .toLowerCase()
+      .toLowerCase();
   }
 });
 

@@ -6,6 +6,6 @@ module.exports = [
     grandTotal: 39.98
   },
   {
-    grandTotal: 0.00
+    grandTotal: 0.0
   }
 ];
