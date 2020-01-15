@@ -1,9 +1,11 @@
 'use strict';
 
 const db = require('../server/db');
-const {User, Category} = require('../server/db/models');
+const {User, Category, Product, Order} = require('../server/db/models');
 const userArray = require('./User-seed');
 const categoryArray = require('./Category-seed');
+const productArray = require('./Product-seed');
+const orderArray = require('./Order-seed');
 
 async function seed() {
   await db.sync({force: true});
@@ -13,16 +15,35 @@ async function seed() {
     User.create(userArray[0]),
     User.create(userArray[1])
   ]);
-  //below is currently breaking code
-  // const categories = await Promise.all([
-  //   Category.create(categoryArray[0]),
-  //   User.create(categoryArray[1])
-  // ])
+  const categories = await Promise.all([
+    Category.create(categoryArray[0]),
+    Category.create(categoryArray[1])
+  ]);
 
-  // console.log(`seeded ${users.length} users`)
-  // console.log(`seeded successfully \n`)
-  // console.log(`seeded ${categories.length} categories`)
-  // console.log(`seeded successfully \n`)
+  const products = await Promise.all([
+    Product.create(productArray[0]),
+    Product.create(productArray[1]),
+    Product.create(productArray[2]),
+    Product.create(productArray[3])
+  ]);
+
+  const orders = await Promise.all([
+    Order.create(orderArray[0]),
+    Order.create(orderArray[1]),
+    Order.create(orderArray[2])
+  ]);
+
+  console.log(`seeded ${users.length} users`);
+  console.log(`seeded successfully \n`);
+
+  console.log(`seeded ${categories.length} categories`);
+  console.log(`seeded successfully \n`);
+
+  console.log(`seeded ${products.length} categories`);
+  console.log(`seeded successfully \n`);
+
+  console.log(`seeded ${orders.length} categories`);
+  console.log(`seeded successfully \n`);
 }
 
 // We've separated the `seed` function from the `runSeed` function.
