@@ -13,7 +13,7 @@ router.get('/', async (req, res, next) => {
 
 router.get('/:slug', async (req, res, next) => {
   try {
-    const selectCategory = await Category.findAll({
+    const selectCategory = await Category.findOne({
       where: {
         slug: req.params.slug
       }
