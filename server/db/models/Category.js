@@ -14,7 +14,7 @@ const Category = db.define('category', {
     unique: true
   },
   imageUrl: {
-    type: Sequelize.STRING,
+    type: Sequelize.TEXT,
     defaultValue: 'default-category.jpeg'
   },
   description: {
@@ -35,6 +35,8 @@ Category.beforeValidate(category => {
       .replace(/\s/g, '-')
       .replace(/\W/g, '')
       .toLowerCase();
+  } else {
+    category.slug = category.slug.toLowerCase();
   }
 });
 

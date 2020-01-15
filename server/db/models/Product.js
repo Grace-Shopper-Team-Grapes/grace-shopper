@@ -24,15 +24,11 @@ const Product = db.define('product', {
     allowNull: false
   },
   imageUrl: {
-    type: Sequelize.STRING,
+    type: Sequelize.TEXT,
     defaultValue: 'default-product.jpeg'
   },
   description: {
     type: Sequelize.TEXT
-  },
-  inStock: {
-    type: Sequelize.BOOLEAN,
-    defaultValue: false
   },
   isPublished: {
     type: Sequelize.BOOLEAN,
@@ -49,6 +45,8 @@ Product.beforeValidate(product => {
       .replace(/\s/g, '-')
       .replace(/\W/g, '')
       .toLowerCase();
+  } else {
+    product.slug = product.slug.toLowerCase();
   }
 });
 

@@ -4,7 +4,6 @@ const Order = require('./Order');
 const OrderProduct = require('./OrderProduct');
 const Product = require('./Product');
 const OrderStatus = require('./OrderStatus');
-const ShippingMethod = require('./ShippingMethod');
 const Category = require('./Category');
 
 User.hasMany(Order);
@@ -12,18 +11,30 @@ User.hasMany(Address, {as: 'Shipping'});
 User.hasMany(Address, {as: 'Billing'});
 //Product.belongsToMany(OrderProduct);
 Category.hasMany(Product);
+
+// One-to-One
 Order.belongsTo(User);
-Order.hasOne(Address);
+Order.belongsTo(Address);
 Order.hasOne(OrderStatus);
 Order.hasMany(OrderProduct);
 Order.hasOne(ShippingMethod);
 OrderProduct.hasOne(Product);
 OrderProduct.belongsTo(Order);
 Order.hasOne(Product);
+
 OrderStatus.belongsTo(Order);
-ShippingMethod.belongsTo(Order);
-Address.belongsTo(User);
-Address.belongsTo(Order);
+
+// One-to-Many
+User.hasMany(Order);
+User.belongsTo(Address, {as: 'defaultShipping'});
+User.belongsTo(Address, {as: 'defaultBilling'});
+
+// Many-to-Many
+Product.belongsToMany(Category, {through: 'CategoryProducts'});
+Category.belongsToMany(Product, {through: 'CategoryProducts'});
+Order.belongsToMany(Product, {through: OrderLineItem});
+Product.belongsToMany(Order, {through: OrderLineItem});
+
 //
 /**
  * If we had any associations to make, this would be a great place to put them!
@@ -45,6 +56,5 @@ module.exports = {
   OrderProduct,
   Product,
   OrderStatus,
-  ShippingMethod,
   Category
 };
