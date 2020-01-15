@@ -1,5 +1,5 @@
-const Sequelize = require('sequelize')
-const db = require('../db')
+const Sequelize = require('sequelize');
+const db = require('../db');
 
 const Product = db.define('product', {
   name: {
@@ -32,13 +32,13 @@ const Product = db.define('product', {
   },
   inStock: {
     type: Sequelize.BOOLEAN,
-    defaultValue: 0
+    defaultValue: false
   },
   isPublished: {
     type: Sequelize.BOOLEAN,
-    defaultValue: 0
+    defaultValue: false
   }
-})
+});
 
 Product.beforeValidate(product => {
   /*
@@ -48,8 +48,8 @@ Product.beforeValidate(product => {
     product.slug = product.name
       .replace(/\s/g, '-')
       .replace(/\W/g, '')
-      .toLowerCase()
+      .toLowerCase();
   }
-})
+});
 
-module.exports = Product
+module.exports = Product;
