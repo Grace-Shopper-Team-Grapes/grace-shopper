@@ -32,8 +32,8 @@ User.belongsTo(Address, {as: 'defaultBilling'});
 // Many-to-Many
 Product.belongsToMany(Category, {through: 'CategoryProducts'});
 Category.belongsToMany(Product, {through: 'CategoryProducts'});
-Order.belongsToMany(Product, {through: OrderLineItem});
-Product.belongsToMany(Order, {through: OrderLineItem});
+Order.belongsToMany(Product, {through: OrderProduct});
+Product.belongsToMany(Order, {through: OrderProduct});
 
 //
 /**
