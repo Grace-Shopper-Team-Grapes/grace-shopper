@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const db = require('../db');
 
-const OrderLineItem = db.define('orderLineItem', {
+const OrderProduct = db.define('orderProduct', {
   price: {
     type: Sequelize.FLOAT,
     allowNull: false,
@@ -16,4 +16,4 @@ const OrderLineItem = db.define('orderLineItem', {
 
 // NEED A INSTANCE METHOD TO GRAB THE PRODUCT PRICE AT CREATION
 
-module.exports = OrderLineItem;
+module.exports = OrderProduct;
