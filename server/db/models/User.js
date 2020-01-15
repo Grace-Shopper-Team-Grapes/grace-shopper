@@ -35,11 +35,8 @@ const User = db.define('user', {
       len: [9, 11]
     }
   },
-  defaultShipping: {
-    type: Sequelize.STRING
-  },
-  defaultBilling: {
-    type: Sequelize.STRING
+  address: {
+    type: Sequelize.TEXT
   },
   password: {
     type: Sequelize.STRING,

@@ -1,7 +1,7 @@
 const User = require('./User');
 const Address = require('./Address');
 const Order = require('./Order');
-const OrderLineItem = require('./OrderLineItem');
+const OrderProduct = require('./OrderProduct');
 const Product = require('./Product');
 const OrderStatus = require('./OrderStatus');
 const ShippingMethod = require('./ShippingMethod');
@@ -10,15 +10,15 @@ const Category = require('./Category');
 User.hasMany(Order);
 User.hasMany(Address, {as: 'Shipping'});
 User.hasMany(Address, {as: 'Billing'});
-//Product.belongsToMany(OrderLineItem);
+//Product.belongsToMany(OrderProduct);
 Category.hasMany(Product);
 Order.belongsTo(User);
 Order.hasOne(Address);
 Order.hasOne(OrderStatus);
-Order.hasMany(OrderLineItem);
+Order.hasMany(OrderProduct);
 Order.hasOne(ShippingMethod);
-OrderLineItem.hasOne(Product);
-OrderLineItem.belongsTo(Order);
+OrderProduct.hasOne(Product);
+OrderProduct.belongsTo(Order);
 Order.hasOne(Product);
 OrderStatus.belongsTo(Order);
 ShippingMethod.belongsTo(Order);
@@ -42,7 +42,7 @@ module.exports = {
   User,
   Address,
   Order,
-  OrderLineItem,
+  OrderProduct,
   Product,
   OrderStatus,
   ShippingMethod,
