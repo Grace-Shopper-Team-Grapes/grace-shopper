@@ -8,7 +8,6 @@ const Category = require('./Category');
 Order.belongsTo(User);
 Order.hasMany(OrderProduct);
 OrderProduct.belongsTo(Order);
-Order.hasOne(Product);
 
 // One-to-Many
 User.hasMany(Order);
