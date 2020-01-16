@@ -1,0 +1,24 @@
+#search {
+  flex-grow: 1;
+
+  .search__form {
+    display: flex;
+
+    .search__input {
+      flex-grow: 1;
+      background-color: #e7e6f6;
+      border: 1px solid $dark-purple;
+      border-right: none;
+      border-bottom: 2px solid $dark-purple;
+    }
+
+    .search__submit {
+      font-weight: 500;
+      color: $light-green;
+      padding: $s-size $l-size;
+      background-color: $medium-purple;
+      border-color: $medium-purple;
+      border-bottom: 2px solid $dark-purple;
+    }
+  }
+}

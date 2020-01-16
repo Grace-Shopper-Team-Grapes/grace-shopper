@@ -1,0 +1,26 @@
+#header {
+  padding: $l-size 0 0;
+  justify-content: center;
+  /* background-color: lighten($light-purple, 30%); */
+  border-bottom: 1px solid $light-purple;
+}
+
+.header__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header__row--one {
+  padding-bottom: $s-size;
+}
+
+.header__row--one > div {
+  margin-right: 10rem;
+}
+.header__row--one:last-child {
+  margin-right: 1rem;
+}
+
+@import './logo';
+@import './search';

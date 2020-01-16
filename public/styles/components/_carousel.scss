@@ -1,0 +1,11 @@
+#carousel {
+  height: 400px;
+
+  .carousel__item {
+    background-size: cover;
+  }
+
+  .carousel__item--one {
+    background-image: url('/assets/grapes-shopper-hero-banner.jpg');
+  }
+}

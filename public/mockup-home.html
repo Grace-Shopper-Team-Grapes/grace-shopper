@@ -4,51 +4,62 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width initial-scale=1.0" />
     <title>Boilermaker</title>
-    <link rel="stylesheet" href="/style.css" />
+    <!-- <link rel="stylesheet" href="/style.css" /> -->
     <script defer src="/bundle.js"></script>
-    <style>
-      /*
-      #6F58C9
-      #7E78D2
-      */
-      html {
-        font-size: 62.5%;
-      }
-      body {
-        font-family: Helvetica, Arial, sans-serif;
-        font-size: 1.6rem;
-      }
-      #header {
-        background-color: #6f58c9;
-      }
-    </style>
   </head>
   <body>
     <header id="header">
-      <div className="header__row--one">
+      <div class="header__row header__row--one container">
         <div id="logo">
-          Grapes Shopper
+          <span class="logo--grapes">Grapes</span
+          ><span class="logo--shopper">Shopper</span>
         </div>
         <div id="search">
-          <input name="searchInput" type="text" className="search__input" />
-          <button name="searchSubmit">Search</button>
+          <form class="search__form">
+            <input name="searchInput" type="text" class="search__input" />
+            <button name="searchSubmit" class="search__submit">ICON</button>
+          </form>
           <!-- use FontAwesome? -->
         </div>
         <div id="quick-links">
-          <ul>
-            <li>Cart (0)</li>
-            <li>Login/Signup</li>
+          <ul class="quick-links__list">
+            <li class="quick-links__item">
+              <a href="#" class="quick-links__item-link">Login</a>
+            </li>
+            <li class="quick-links__item">
+              <a href="#" class="quick-links__item-link">Signup</a>
+            </li>
+            <li class="quick-links__item">
+              <a href="#" class="quick-links__item-link">Cart (0)</a>
+            </li>
           </ul>
         </div>
       </div>
-      <div className="header__row--two">
-        <nav className="mainNav"></nav>
+      <div class="header__row header__row--two nav-bar container">
+        <nav class="main-nav">
+          <a href="#" class="main-nav__item">Home</a>
+          <a href="#" class="main-nav__item">Products</a>
+          <a href="#" class="main-nav__item">Categories</a>
+          <a href="#" class="main-nav__item">About</a>
+        </nav>
       </div>
     </header>
-    <div className="hero">
-      <img src="/assets/grapes-shopper-hero-banner.jpg" style="" />
+    <div id="carousel">
+      <div class="carousel__item carousel__item--one">
+        <div class="carousel__content">
+          <strong class="carousel__content-heading">
+            A Carousel Item Heading
+          </strong>
+          <p class="carousel__content-text">
+            This is a bunch of text belonging to a carousel item. We can have a
+            normal button for usual cases, and two more states for different
+            ones. Because we style blocks by class selectors with BEM, we can
+            implement them using any tags we want
+          </p>
+        </div>
+      </div>
     </div>
-    <div className="page-width">
+    <div class="page-width">
       This is the main content
     </div>
     <footer></footer>

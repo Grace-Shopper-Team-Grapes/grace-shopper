@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css?family=Changa+One|Lilita+One&display=swap');
+html {
+  font-size: 62.5%;
+}
+body {
+  font-family: $body-font;
+  font-size: $m-size;
+}
+
+a {
+  text-decoration: none;
+}
+
+label {
+  display: block;
+}
+
+nav a {
+  display: inline-block;
+  margin: 1em;
+}
+
+form div {
+  margin: 1em;
+  display: inline-block;
+}

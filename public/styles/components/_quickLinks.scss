@@ -1,0 +1,10 @@
+.quick-links__list {
+  display: flex;
+  list-style-type: none;
+
+  .quick-links__item-link {
+    padding: $s-size;
+    font-size: $s-size;
+    color: $dark;
+  }
+}
