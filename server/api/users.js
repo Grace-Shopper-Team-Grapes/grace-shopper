@@ -45,27 +45,7 @@ router.get('/:id/orders', async (req, res, next) => {
   }
 });
 
-// Get all cart items
-router.get('/:id/orderProducts', async (req, res, next) => {
-  try {
-    const notPurchasedOrder = await Order.findOne({
-      where: {
-        userId: req.params.id,
-        isPurchased: false
-      },
-      include: [
-        {
-          model: OrderProduct
-        }
-      ]
-    });
-    res.json(notPurchasedOrder);
-  } catch (e) {
-    next(e);
-  }
-});
-
-// edit user
+// Edit user
 router.put('/:id', async (req, res, next) => {
   try {
     const updatedStatus = await User.update(
