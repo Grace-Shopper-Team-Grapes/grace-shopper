@@ -1,11 +1,41 @@
 #carousel {
-  height: 400px;
+  height: 360px;
+  display: flex;
 
   .carousel__item {
     background-size: cover;
+    padding: 0 $l-size;
+    width: 100vw;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+
+    .carousel__content {
+      max-width: 50vw;
+      background-color: rgba($dark, 0.75);
+      padding: $m-size $l-size;
+      color: $light-green;
+      margin-left: $s-size;
+      margin-bottom: $m-size;
+
+      .carousel__content-heading {
+        font-size: $l-size;
+        border-bottom: 2px solid $medium-purple;
+        padding: $s-size;
+        padding-left: 0;
+        margin: $s-size;
+      }
+
+      .carousel__content-text {
+        padding: $s-size;
+        line-height: $l-size;
+        color: lighten($light-green, 10%);
+      }
+    }
   }
 
   .carousel__item--one {
     background-image: url('/assets/grapes-shopper-hero-banner.jpg');
+    background-position-y: -250px;
   }
 }
