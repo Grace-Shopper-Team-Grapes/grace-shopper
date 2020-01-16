@@ -3,7 +3,7 @@ const db = require('../db');
 
 const Order = db.define('order', {
   grandTotal: {
-    type: Sequelize.FLOAT,
+    type: Sequelize.INTEGER,
     allowNull: false
   },
   isPurchased: {
@@ -17,5 +17,9 @@ const Order = db.define('order', {
     defaultValue: false
   }
 });
+
+Order.beforeValidate = order => {
+  order.price = order.price * 100;
+};
 
 module.exports = Order;
