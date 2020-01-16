@@ -11,24 +11,22 @@ async function seed() {
   await db.sync({force: true});
   console.log('db synced!');
 
-  const users = await Promise.all(userArray.map(u => User.create(u)));
+  const users = await Promise.all(userArray.map(user => User.create(user)));
   const categories = await Promise.all(
-    categoryArray.map(c => Category.create(c))
+    categoryArray.map(category => Category.create(category))
   );
-  const products = await Promise.all(productArray.map(p => Product.create(p)));
-  const orders = await Promise.all(orderArray.map(o => Order.create(o)));
+  const products = await Promise.all(
+    productArray.map(product => Product.create(product))
+  );
+  const orders = await Promise.all(
+    orderArray.map(order => Order.create(order))
+  );
 
   console.log(`seeded ${users.length} users`);
-  console.log(`seeded successfully \n`);
-
   console.log(`seeded ${categories.length} categories`);
-  console.log(`seeded successfully \n`);
-
-  console.log(`seeded ${products.length} categories`);
-  console.log(`seeded successfully \n`);
-
-  console.log(`seeded ${orders.length} categories`);
-  console.log(`seeded successfully \n`);
+  console.log(`seeded ${products.length} products`);
+  console.log(`seeded ${orders.length} orders`);
+  console.log(`Seeding Successful! \n`);
 }
 
 // We've separated the `seed` function from the `runSeed` function.
