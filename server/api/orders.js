@@ -1,5 +1,6 @@
 const router = require('express').Router();
-const {Order, Product} = require('../db/models');
+const {User, Order, Product, OrderProduct} = require('../db/models');
+const {Sequelize} = require('sequelize');
 
 router.post('/', async (req, res, next) => {
   try {
