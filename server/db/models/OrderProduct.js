@@ -15,9 +15,12 @@ const OrderProduct = db.define('orderProduct', {
 });
 
 // NEED A INSTANCE METHOD TO GRAB THE PRODUCT PRICE AT CREATION
+function financial(x) {
+  return Number(Number.parseFloat(x).toFixed(2));
+}
 
-OrderProduct.beforeValidate = orderProduct => {
-  orderProduct.price = orderProduct.price * 100;
-};
+OrderProduct.beforeValidate(orderProduct => {
+  orderProduct.price = financial(orderProduct.price * 100);
+});
 
 module.exports = OrderProduct;

@@ -50,8 +50,12 @@ Product.beforeValidate(product => {
   }
 });
 
+function financial(x) {
+  return Number(Number.parseFloat(x).toFixed(2));
+}
+
 Product.beforeValidate(product => {
-  product.price = product.price * 100;
+  product.price = financial(product.price * 100);
 });
 
 module.exports = Product;

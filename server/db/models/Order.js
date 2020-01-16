@@ -17,9 +17,12 @@ const Order = db.define('order', {
     defaultValue: false
   }
 });
+function financial(x) {
+  return Number(Number.parseFloat(x).toFixed(2));
+}
 
-Order.beforeValidate = order => {
-  order.price = order.price * 100;
-};
+Order.beforeValidate(order => {
+  order.grandTotal = financial(order.grandTotal * 100);
+});
 
 module.exports = Order;
