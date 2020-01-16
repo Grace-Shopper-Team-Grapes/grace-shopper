@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const {User, Order} = require('../db/models');
+const {User, Order, OrderProduct, Product} = require('../db/models');
 module.exports = router;
 
 // Get all users - ADMIN ONLY
@@ -42,6 +42,26 @@ router.get('/:id/orders', async (req, res, next) => {
     res.json(orders);
   } catch (error) {
     next(error);
+  }
+});
+
+// Get all cart items
+router.get('/:id/orderProducts', async (req, res, next) => {
+  try {
+    const notPurchasedOrder = await Order.findOne({
+      where: {
+        userId: req.params.id,
+        isPurchased: false
+      },
+      include: [
+        {
+          model: OrderProduct
+        }
+      ]
+    });
+    res.json(notPurchasedOrder);
+  } catch (e) {
+    next(e);
   }
 });
 
