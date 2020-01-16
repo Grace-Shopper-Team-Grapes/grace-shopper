@@ -1,0 +1,40 @@
+/*
+$dark-purple: #6f58c9;
+$light-purple: #7e78d2;
+$gray: #c3c4dd;
+$light-green: #e1f6f0;
+$dark: #221b14;
+
+$body-font: Helvetica, arial, sans-serif;
+
+$m-size: 1.6rem;
+*/
+
+html {
+  font-size: 62.5%;
+}
+body {
+  font-family: Helvetica, arial, sans-serif;
+  font-size: 1.6rem;
+}
+#header {
+  background-color: #6f58c9;
+}
+
+a {
+  text-decoration: none;
+}
+
+label {
+  display: block;
+}
+
+nav a {
+  display: inline-block;
+  margin: 1em;
+}
+
+form div {
+  margin: 1em;
+  display: inline-block;
+}

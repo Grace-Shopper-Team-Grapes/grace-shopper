@@ -1,0 +1,18 @@
+.nav-bar {
+  display: flex;
+
+  .main-nav {
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+
+    .main-nav__item {
+      padding: 0.3rem $l-size;
+      color: $dark;
+      font-weight: 800;
+      font-size: $m-size;
+      font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
+        'Lucida Sans', Arial, sans-serif;
+    }
+  }
+}
