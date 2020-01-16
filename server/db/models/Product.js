@@ -14,7 +14,7 @@ const Product = db.define('product', {
     unique: true
   },
   price: {
-    type: Sequelize.FLOAT,
+    type: Sequelize.INTEGER,
     allowNull: false,
     notEmpty: true
   },
@@ -48,6 +48,10 @@ Product.beforeValidate(product => {
   } else {
     product.slug = product.slug.toLowerCase();
   }
+});
+
+Product.beforeValidate(product => {
+  product.price = product.price * 100;
 });
 
 module.exports = Product;

@@ -3,7 +3,7 @@ const db = require('../db');
 
 const OrderProduct = db.define('orderProduct', {
   price: {
-    type: Sequelize.FLOAT,
+    type: Sequelize.INTEGER,
     allowNull: false,
     notEmpty: true
   },
@@ -15,5 +15,9 @@ const OrderProduct = db.define('orderProduct', {
 });
 
 // NEED A INSTANCE METHOD TO GRAB THE PRODUCT PRICE AT CREATION
+
+OrderProduct.beforeValidate = orderProduct => {
+  orderProduct.price = orderProduct.price * 100;
+};
 
 module.exports = OrderProduct;
