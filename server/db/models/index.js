@@ -4,10 +4,6 @@ const OrderProduct = require('./OrderProduct');
 const Product = require('./Product');
 const Category = require('./Category');
 
-User.hasMany(Order);
-//Product.belongsToMany(OrderProduct);
-Category.hasMany(Product);
-
 // One-to-One
 Order.belongsTo(User);
 Order.hasMany(OrderProduct);
