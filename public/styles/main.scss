@@ -1,8 +1,13 @@
 @import './base/settings';
 @import './base/base';
+@import './base/grid';
 
+@import './components/carousel';
 @import './components/container';
+@import './components/feature-category-grid';
+@import './components/footer';
 @import './components/header';
 @import './components/mainNav';
+@import './components/page-block';
+@import './components/product-grid';
 @import './components/quickLinks';
-@import './components/carousel';
