@@ -1,0 +1,79 @@
+.pd-container {
+  text-align: center;
+
+  .pd-image-container {
+    height: 360px;
+
+    .pd-image {
+      height: 360px;
+      margin-top: -10px; /* just 'cause I don't have an image editor to crop with */
+    }
+  }
+
+  .pd-title {
+    font: bold $xl-size $title-font;
+    margin: $l-size 0;
+  }
+
+  .pd-content-container {
+    max-width: 96rem;
+    margin: 0 auto;
+    position: relative;
+
+    .pd-add-to-cart__container {
+      position: sticky;
+      right: 20px;
+      top: 50%;
+      background-color: lighten($light-purple, 10%);
+      width: 25%;
+      float: right;
+      padding: $m-size $l-size;
+
+      .pd-add-to-cart__form {
+        display: flex;
+        justify-content: space-around;
+
+        .pd-add-to-cart__quantity {
+          width: $xl-size;
+          flex-grow: 1;
+          background-color: #e7e6f6;
+          border: 1px solid $dark-purple;
+          border-right: none;
+          border-bottom: 2px solid $dark-purple;
+          padding: 0.2rem $s-size 0.2rem;
+          font-size: 2rem;
+          text-align: center;
+
+          &:focus {
+            background-color: #ffffff;
+          }
+        }
+
+        .pd-add-to-cart__submit {
+          font-weight: 500;
+          color: #e1f6f0;
+          padding: 0.9rem 2.2rem;
+          background-color: $medium-purple;
+          border-color: $medium-purple;
+          border-bottom: 2px solid $dark-purple;
+          cursor: pointer;
+          transition: background-color 500ms linear;
+
+          &:hover {
+            background-color: $dark-purple;
+          }
+        }
+      }
+    }
+
+    .pd-content {
+      max-width: 60%;
+      font-size: 2.2rem;
+      text-align: left;
+
+      p {
+        margin-bottom: $l-size;
+      }
+    }
+  }
+}
