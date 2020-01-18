@@ -17,7 +17,7 @@ module.exports = [
     name: 'Syrah',
     slug: 'syrah',
     price: 9.99,
-    inventory: 0,
+    inventory: 3,
     imageUrl:
       'https://www.totalwine.com/dynamic/490x/media/sys_master/twmmedia/hb1/h53/9084965650462.png',
     description:
@@ -30,7 +30,7 @@ module.exports = [
     name: 'Zinfandel',
     slug: 'zinfandel',
     price: 0,
-    inventory: 0,
+    inventory: 1,
     imageUrl:
       'https://www.haskells.com/media/catalog/product/cache/1/image/816x1200/040ec09b1e35df139433887a97daa66f/t/o/torchbearer_zin.jpg',
     description:
