@@ -72,13 +72,21 @@ router.post('/addToCart', async (req, res, next) => {
       }).spread(function(orderProduct, created) {
         if (!created) {
           orderProduct.update({
-            quantity: Number(pqty) + orderProduct.quantity
+            //depending on implementation, either:
+            //FOR FORM:
+            quantity: Number(pqty)
+            //OR other style:
+            // quantity: Number(pqty) + orderProduct.quantity
           });
         }
       });
 
       //GET ALL ORDERPRODUCTS
-      const allOrderProducts = await OrderProduct.findAll({});
+      const allOrderProducts = await OrderProduct.findAll({
+        where: {
+          orderId: usersCart.id
+        }
+      });
 
       //ACCUMULATE GRAND TOTAL
       let grandTotal = 0;
@@ -107,7 +115,10 @@ router.get('/checkout/:userId', async (req, res, next) => {
     //put in on the frontend route.
 
     //CHECK IF IN STOCK
-    const order = await Order.findByPk(req.params.userId);
+    const order = await Order.findOne({
+      id: req.params.userId,
+      isPurchased: false
+    });
     const allProducts = await Product.findAll({});
     const allRespectiveOrderProducts = await OrderProduct.findAll({
       where: {
@@ -116,10 +127,10 @@ router.get('/checkout/:userId', async (req, res, next) => {
     });
 
     let allProductsWantedAvailable = true;
-    let namesAndInventory = {};
+    const namesAndInventory = {};
     allProducts.forEach(product => {
+      namesAndInventory[product.name] = product.inventory;
       allRespectiveOrderProducts.forEach(orderProduct => {
-        namesAndInventory[orderProduct.name] = product.inventory;
         if (product.id === orderProduct.productId) {
           if (orderProduct.quantity > product.inventory) {
             allProductsWantedAvailable = false;
@@ -138,8 +149,15 @@ router.get('/checkout/:userId', async (req, res, next) => {
       await Order.create({userId: req.params.userId});
 
       //NEED TO CHANGE INVENTORY OF PRODUCTS
+      allProducts.forEach(product => {
+        allRespectiveOrderProducts.forEach(orderProduct => {
+          if (product.id === orderProduct.productId) {
+            namesAndInventory[product.name] = orderProduct.quantity;
+          }
+        });
+      });
       allProducts.forEach(async product => {
-        product.update({
+        await product.update({
           where: {
             inventory: namesAndInventory[product.name]
           }
@@ -147,11 +165,11 @@ router.get('/checkout/:userId', async (req, res, next) => {
       });
 
       //redirect below to a checkout confirmation page
-      res.redirect('/products').sendStatus(200);
+      res.redirect('/products');
     } else {
-      //NEED TO BLOCK ORDER AT THE LEAST AND MAYBE SEND TO OUT OF ORDER PAGE
+      //BLOCK ORDER AND AT THE LEAST MAYBE SEND TO OUT OF ORDER PAGE
 
-      res.redirect('/products'.sendStatus(400));
+      res.redirect('/home');
     }
   } catch (error) {
     next(error);
@@ -166,7 +184,7 @@ router.get('/ship/:orderId', async (req, res, next) => {
     await order.update({
       isShipped: true
     });
-    //redirect below to a shipping confirmation page
+    //redirect below to an admin shipping confirmation page
     res.redirect('/products').sendStatus(200);
   } catch (error) {
     next(error);
