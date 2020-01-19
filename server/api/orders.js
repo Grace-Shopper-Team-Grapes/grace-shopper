@@ -142,14 +142,6 @@ router.get('/checkout/:userId', async (req, res, next) => {
     });
     //IF ALL PRODUCTS WANTED ARE AVAILABLE
     if (allProductsWantedAvailable) {
-      //CHANGE ISPURCHASED STATUS
-      await order.update({
-        isPurchased: true
-      });
-
-      //Need a new order now with default properties
-      await Order.create({userId: req.params.userId});
-
       //NEED TO CHANGE INVENTORY OF PRODUCTS
       allProducts.forEach(product => {
         allRespectiveOrderProducts.forEach(orderProduct => {
@@ -166,12 +158,28 @@ router.get('/checkout/:userId', async (req, res, next) => {
         });
       });
 
+      //CHANGE ISPURCHASED STATUS
+      await order.update({
+        isPurchased: true
+      });
+
+      //Need a new order now with default properties
+      await Order.create({userId: req.params.userId});
+
       //redirect below to a checkout confirmation page
       res.redirect('/products');
     } else {
-      //BLOCK ORDER AND AT THE LEAST MAYBE SEND TO OUT OF ORDER PAGE
+      //BLOCK ORDER AND SEND ERROR
 
-      res.redirect('/home');
+      for (let name in namesAndInventory) {
+        if (namesAndInventory.hasOwnProperty(name)) {
+          throw new Error(
+            `\nthis product: ${name}, only has this much inventory: ${
+              namesAndInventory[name]
+            }`
+          );
+        }
+      }
     }
   } catch (error) {
     next(error);
