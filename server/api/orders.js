@@ -116,8 +116,10 @@ router.get('/checkout/:userId', async (req, res, next) => {
 
     //CHECK IF IN STOCK
     const order = await Order.findOne({
-      id: req.params.userId,
-      isPurchased: false
+      where: {
+        userId: req.params.userId,
+        isPurchased: false
+      }
     });
     const allProducts = await Product.findAll({});
     const allRespectiveOrderProducts = await OrderProduct.findAll({
@@ -126,10 +128,10 @@ router.get('/checkout/:userId', async (req, res, next) => {
       }
     });
 
-    let allProductsWantedAvailable = true;
-    const namesAndInventory = {};
+    let allProductsWantedAvailable = true; //a flag
+    const namesAndInventory = {}; //holds names and inventory
     allProducts.forEach(product => {
-      namesAndInventory[product.name] = product.inventory;
+      namesAndInventory[product.name] = product.inventory; //gets entire arsenal
       allRespectiveOrderProducts.forEach(orderProduct => {
         if (product.id === orderProduct.productId) {
           if (orderProduct.quantity > product.inventory) {
@@ -152,15 +154,15 @@ router.get('/checkout/:userId', async (req, res, next) => {
       allProducts.forEach(product => {
         allRespectiveOrderProducts.forEach(orderProduct => {
           if (product.id === orderProduct.productId) {
-            namesAndInventory[product.name] = orderProduct.quantity;
+            namesAndInventory[product.name] =
+              namesAndInventory[product.name] - orderProduct.quantity;
           }
         });
       });
+
       allProducts.forEach(async product => {
         await product.update({
-          where: {
-            inventory: namesAndInventory[product.name]
-          }
+          inventory: namesAndInventory[product.name]
         });
       });
 
@@ -185,7 +187,7 @@ router.get('/ship/:orderId', async (req, res, next) => {
       isShipped: true
     });
     //redirect below to an admin shipping confirmation page
-    res.redirect('/products').sendStatus(200);
+    res.sendStatus(200);
   } catch (error) {
     next(error);
   }

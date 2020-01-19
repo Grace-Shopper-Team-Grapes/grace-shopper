@@ -19,12 +19,4 @@ const Order = db.define('order', {
   }
 });
 
-// function financial(x) {
-//   return Number(Number.parseFloat(x).toFixed(2));
-// }
-
-// Order.beforeValidate(order => {
-//   order.grandTotal = financial(order.grandTotal * 100);
-// });
-
 module.exports = Order;
