@@ -10,7 +10,7 @@ class SingleProduct extends React.Component {
 
   render() {
     if (!this.props.product) {
-      return <h1>loading singleProduct...</h1>;
+      return <h1><i class="fas fa-sync-alt fa-spin"></i>loading singleProduct...</h1>;
     } else {
       const product = this.props.product;
       return (
