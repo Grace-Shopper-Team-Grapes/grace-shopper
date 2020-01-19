@@ -1,4 +1,5 @@
 // FOR GRAPES
+//UPDATE USER'S PHONE NUMBER:
 curl -i -X PUT -H 'Content-Type: application/json' -d '{
     "firstName" : "Jim",
     "lastName":"Bob",
@@ -6,6 +7,9 @@ curl -i -X PUT -H 'Content-Type: application/json' -d '{
     "phone":"9999999999",
     "password":"123",
     "googleId":"bobo"} ' http://localhost:8080/api/account/1
+//ADD TO CART
+curl -i -X POST -H 'Content-Type: application/json' -d '{"testId":"1", "pid":"1", "pqty":2}' http://localhost:8080/api/orders/addToCart
+
 
 //FOR REFERENCE
 
