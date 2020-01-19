@@ -183,11 +183,13 @@ router.get('/ship/:orderId', async (req, res, next) => {
   try {
     //req.user.id equivalent should be found on the frontend.
     const order = await Order.findByPk(req.params.orderId);
-    await order.update({
-      isShipped: true
-    });
-    //redirect below to an admin shipping confirmation page
-    res.sendStatus(200);
+    if (order.isPurchased) {
+      await order.update({
+        isShipped: true
+      });
+      //redirect below to an admin shipping confirmation page
+      res.sendStatus(200);
+    } else res.sendStatus(400);
   } catch (error) {
     next(error);
   }
