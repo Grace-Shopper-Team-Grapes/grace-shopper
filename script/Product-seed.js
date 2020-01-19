@@ -29,8 +29,8 @@ module.exports = [
     // Red Wine, not in stock and not published
     name: 'Zinfandel',
     slug: 'zinfandel',
-    price: 0,
-    inventory: 1,
+    price: 100,
+    inventory: 5,
     imageUrl:
       'https://www.haskells.com/media/catalog/product/cache/1/image/816x1200/040ec09b1e35df139433887a97daa66f/t/o/torchbearer_zin.jpg',
     description:
