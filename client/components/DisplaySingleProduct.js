@@ -4,6 +4,11 @@ import {getSingleProduct} from '../store/singleProduct';
 import {Link} from 'react-router-dom';
 import AddToCart from './forms/AddToCart';
 
+//NOTES: addToCart IS NOT PART OF THE REDUX STORE
+//IT DOES THE POST REQUEST AND THEN REDIRECTS
+//TO AN ENTIRELY NEW PAGE (SO PAGE RELOAD)
+//SO IT JUST PASSED ALONG AS A PROP
+
 class SingleProduct extends React.Component {
   componentDidMount() {
     this.props.getSingleProduct();
@@ -13,7 +18,8 @@ class SingleProduct extends React.Component {
     if (!this.props.product) {
       return (
         <h1>
-          <i className="fas fa-sync-alt fa-spin" />loading singleProduct...
+          <i className="fas fa-sync-alt fa-spin" />
+          loading singleProduct...
         </h1>
       );
     } else {
@@ -27,7 +33,11 @@ class SingleProduct extends React.Component {
             <Link to="/products">Back to All Products</Link>
           </h5>
           <div>
-            <AddToCart addToCart={this.props.addToCart} name={product.name} />
+            <AddToCart
+              pid={product.id}
+              inventory={product.inventory}
+              name={product.name}
+            />
           </div>
         </div>
       );

@@ -5,7 +5,6 @@ import history from '../history';
  * ACTION TYPES
  */
 const GOT_SINGLE_PRODUCT = 'GOT_SINGLE_PRODUCT';
-
 /**
  * INITIAL STATE
  */

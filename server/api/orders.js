@@ -46,9 +46,11 @@ router.post('/addToCart', async (req, res, next) => {
     const product = await Product.findByPk(pid);
 
     //BELOW LINE SHOULD BE UNCOMMENTED FOR LIVE VERSION OF SITE
-    //const currentUser = req.user.id;
-    //FOR TESTING, USE NEXT LINE INSTEAD OF ABOVE
-    const currentUser = req.body.testId;
+    //AND FOR FRONT END TESTING
+    //REALLY, SHOULD BE THIS WAY FROM NOW ON
+    const currentUser = req.user.id;
+    //FOR BACKEND TESTING, USE NEXT LINE INSTEAD OF ABOVE
+    //const currentUser = req.body.testId;
 
     // CHECKS TO SEE IF THERE IS ENOUGH INVENTORY FOR REQUEST
     if (product.inventory >= pqty) {
@@ -98,7 +100,7 @@ router.post('/addToCart', async (req, res, next) => {
       await usersCart.update({
         grandTotal: grandTotal
       });
-      res.sendStatus(200);
+      res.json(200);
     } else {
       //OTHERWISE WE"RE OUT OF THE PRODUCT
       throw new Error('Not enough product available.');

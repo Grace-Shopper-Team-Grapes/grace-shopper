@@ -8,8 +8,8 @@ const AddToCartForm = props => {
         type="text"
         name="name"
         onChange={props.handleChange}
-        //placeholder="name"
-        value={props.name}
+        //below forces form to hold name
+        value={props.name || ''} // this condition fixes a warning
       />
 
       <label htmlFor="quantity">Quantity: </label>
@@ -18,7 +18,7 @@ const AddToCartForm = props => {
         name="quantity"
         onChange={props.handleChange}
         placeholder="1"
-        value={props.quantity}
+        value={props.quantity || ''} // this condition fixes a warning
       />
 
       <button type="submit" disabled={!props.name || !props.quantity}>

@@ -10,10 +10,7 @@ const defaultState = {
 export default class AddToCart extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      ...defaultState,
-      name: this.props.name
-    };
+    this.state = defaultState;
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -24,14 +21,18 @@ export default class AddToCart extends Component {
     });
   }
 
-  handleSubmit(event) {
+  async handleSubmit(event) {
     event.preventDefault();
     try {
-      this.props.addToCart(this.props.productId, this.state.quantity);
-      this.setState({
-        ...defaultState,
-        name: this.props.name
-      });
+      if (Number(this.state.quantity) > Number(this.props.inventory)) {
+        window.alert(`not enough inventory`);
+      } else {
+        await axios.post('/api/orders/addToCart', {
+          pid: this.props.pid,
+          pqty: this.state.quantity
+        });
+      }
+      this.setState(defaultState);
     } catch (err) {
       this.setState({
         errorMessage: `problem adding to cart: ${err.message}`
@@ -45,6 +46,7 @@ export default class AddToCart extends Component {
         {...this.state}
         handleChange={this.handleChange}
         handleSubmit={this.handleSubmit}
+        name={this.props.name}
       />
     );
   }
