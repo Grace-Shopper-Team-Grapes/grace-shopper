@@ -10,7 +10,7 @@ class AllOrderProducts extends React.Component {
   }
 
   render() {
-    if (!this.props.orderProducts && !this.props.products) {
+    if (!this.props.orderProducts) {
       return <h1>loading orderProducts</h1>;
     } else {
       const orderProducts = this.props.orderProducts;
@@ -40,8 +40,7 @@ class AllOrderProducts extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    orderProducts: state.orderProducts,
-    products: state.products
+    orderProducts: state.orderProducts
   };
 };
 
