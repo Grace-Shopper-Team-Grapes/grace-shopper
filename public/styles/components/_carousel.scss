@@ -1,6 +1,7 @@
 #carousel {
   height: 360px;
   display: flex;
+  overflow: hidden;
 
   .carousel__item {
     background-size: cover;
@@ -9,6 +10,8 @@
     height: 100%;
     display: flex;
     align-items: flex-end;
+    overflow: hidden;
+    background-repeat: no-repeat;
 
     .carousel__content {
       max-width: 50vw;
@@ -17,6 +20,7 @@
       color: $light-green;
       margin-left: $s-size;
       margin-bottom: $m-size;
+      display: block;
 
       .carousel__content-heading {
         font-size: $l-size;

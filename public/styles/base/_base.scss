@@ -1,4 +1,7 @@
-@import url('https://fonts.googleapis.com/css?family=Changa+One|Lilita+One&display=swap');
+/* Font imports */
+@import url('https://fonts.googleapis.com/css?family=Changa+One|Lilita+One|Montserrat&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
+
 html {
   font-size: 62.5%;
 }
@@ -20,7 +23,24 @@ nav a {
   margin: 1em;
 }
 
-form div {
-  margin: 1em;
-  display: inline-block;
+ul {
+  padding: 0;
+}
+
+input {
+  outline: none;
+}
+
+button {
+  outline: none;
+  cursor: pointer;
+}
+
+.flex {
+  display: flex;
+}
+
+.light-text,
+.light-text a {
+  color: $light-green !important;
 }

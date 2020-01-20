@@ -1,0 +1,21 @@
+.feature-category-grid {
+  height: 30rem;
+  justify-content: space-between;
+
+  .feature-category-grid-item {
+    background-color: lightgray;
+    display: flex;
+    align-items: flex-end;
+    padding: 0;
+
+    .feature-category-grid-item__title {
+      color: $light-green;
+      font-size: 2.2rem;
+      font-family: $title-font;
+      padding: $m-size $s-size;
+      margin: 0 0 $s-size;
+      width: 100%;
+      background-color: rgba($dark, 0.4);
+    }
+  }
+}

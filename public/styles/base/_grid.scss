@@ -1,0 +1,13 @@
+.grid {
+  display: flex;
+  justify-content: space-between;
+}
+.grid-item--one-half {
+  width: 47%;
+}
+.grid-item--one-third {
+  width: 30%;
+}
+.grid-item--one-fourth {
+  width: 22%;
+}

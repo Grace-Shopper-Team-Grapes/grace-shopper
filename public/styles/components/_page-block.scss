@@ -1,0 +1,10 @@
+.page-block {
+  margin: 0 $l-size $l-size;
+  padding: $s-size;
+
+  .page-block__title {
+    text-align: center;
+    font: bold $l-size Montserrat, Helvetica, Arial, sans-serif;
+    display: block;
+  }
+}

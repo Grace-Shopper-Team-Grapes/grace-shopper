@@ -1,8 +1,18 @@
+/* General */
 @import './base/settings';
 @import './base/base';
+@import './base/grid';
+@import './base/forms';
 
+/* Component-related */
+@import './components/carousel';
+@import './components/cart-overlay';
 @import './components/container';
+@import './components/feature-category-grid';
+@import './components/footer';
 @import './components/header';
 @import './components/mainNav';
+@import './components/page-block';
+@import './components/product-grid';
 @import './components/quickLinks';
-@import './components/carousel';
+@import './components/product-details';

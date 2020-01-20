@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width initial-scale=1.0" />
+    <title>Boilermaker</title>
+    <!-- <link rel="stylesheet" href="/style.css" /> -->
+    <script defer src="/bundle.js"></script>
+    <script
+      src="https://kit.fontawesome.com/af1ba5ce3d.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div id="cart-modal-mask">
+      <div id="cart-modal-main">
+        <h1 class="cart-modal__title">Your Cart</h1>
+        <div class="cart-grid">
+          <div class="cart-grid__header">
+            <div class="grid-item--one-half">&nbsp;</div>
+            <div class="grid-item--one-fourth">Quantity</div>
+            <div class="grid-item--one-fourth">Total</div>
+          </div>
+          <div class="cart-grid__body">
+            <div class="cart-row">
+              <div class="cart-row__info grid-item--one-half">
+                <img class="cart-row__product-thumb" />
+                <div class="cart-row__product-text">
+                  Ornellaia 2014 (6L)
+                  <div class="cart-row__product-remove">
+                    <button class="btn btn--remove"><i class="fas fa-times"></i> Remove</button class="btn btn--remove">
+                  </div>
+                </div>
+              </div>
+              <div class="cart-row__product-quantity grid-item--one-fourth">
+                <input
+                  type="text"
+                  class="product-quantity__input"
+                  name="quantity"
+                  value="1"
+                />
+                <button name="procuct-quantity__increment">+</button>
+                <button name="procuct-quantity__decrement">-</button>
+              </div>
+              <div class="cart-row__product-subtotal grid-item--one-fourth">
+                $20.00
+              </div>
+            </div>
+          </div>
+        </div>
+        <br />
+        <a
+          href="#" style="position: absolute; top: -10px; right: -10px;"
+          onclick="javascript:document.getElementById('cart-modal-main').style.display='none';document.getElementById('cart-modal-mask').style.display='none';"
+          >Close Modal <i style="font-size: 1.6em; background-color: white; color: black; border-radius: 1.6em; " class="fas fa-times-circle"></i></a
+        >
+      </div>
+    </div>
+    <header id="header">
+      <div class="header__row header__row--one container">
+        <div id="logo">
+          <a href="#">
+            <span class="logo--grapes">Grapes</span
+            ><span class="logo--shopper">Shopper</span>
+          </a>
+        </div>
+        <div id="search">
+          <form class="search__form">
+            <input name="searchInput" type="text" class="search__input text__input" />
+            <button name="searchSubmit" class="search__submit btn"><i class="fas fa-search"></i></button>
+          </form>
+          <!-- use FontAwesome? -->
+        </div>
+        <div id="quick-links">
+          <ul class="quick-links__list">
+            <li class="quick-links__item">
+              <a href="#" class="quick-links__item-link">Login</a>
+            </li>
+            <li class="quick-links__item">
+              <a href="#" class="quick-links__item-link">Signup</a>
+            </li>
+            <li class="quick-links__item">
+              <a href="#" class="quick-links__item-link">Cart (0)</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="header__row header__row--two nav-bar container">
+        <nav class="main-nav">
+          <a href="#" class="main-nav__item">Home</a>
+          <a href="#" class="main-nav__item">All Products</a>
+          <a href="#" class="main-nav__item">Categories</a>
+          <a href="#" class="main-nav__item">About</a>
+        </nav>
+      </div>
+    </header>
+    <div class="container">
+      <div class="page-block pd-container">
+        <div class="pd-image-container">
+          <img
+            src="/product-images/ornellaia-2014-6-bottle-box-big.jpg"
+            alt="Ornellaia 2014 (6L) with Ornamental Box"
+            class="pd-image"
+          />
+        </div>
+        <h1 class="pd-title">Ornellaia 2014 (6L) with Ornamental Box</h1>
+        <div class="pd-content-container">
+          <div class="pd-add-to-cart__container">
+            <form class="pd-add-to-cart__form">
+              <input type="text" class="pd-add-to-cart__quantity text__input text__input--center" value="1" />
+              <button type="submit" class="pd-add-to-cart__submit">
+                <i class="fas fa-cart-plus"></i> Add to Cart
+              </button>
+            </form>
+          </div>
+          <div class="pd-content">
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
+              maximus iaculis quam eget posuere. Maecenas eu pharetra lacus, ac
+              viverra turpis. Quisque in cursus ante, et imperdiet diam. Ut eu
+              sodales odio, in facilisis est. Duis rhoncus et leo eu porta. In
+              sit amet est iaculis, tincidunt odio nec, commodo nibh. In
+              lobortis placerat risus, sit amet sollicitudin est tincidunt quis.
+              Curabitur at felis sapien. Phasellus viverra sapien a turpis
+              vestibulum, sed semper eros tempor. Curabitur in molestie ipsum.
+            </p>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
+              maximus iaculis quam eget posuere. Maecenas eu pharetra lacus, ac
+              viverra turpis. Quisque in cursus ante, et imperdiet diam. Ut eu
+              sodales odio, in facilisis est. Duis rhoncus et leo eu porta. In
+              sit amet est iaculis, tincidunt odio nec, commodo nibh. In
+              lobortis placerat risus, sit amet sollicitudin est tincidunt quis.
+              Curabitur at felis sapien. Phasellus viverra sapien a turpis
+              vestibulum, sed semper eros tempor. Curabitur in molestie ipsum.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="footer light-text">
+      <div class="container grid">
+        <div class="footer-links-column grid-item--one-fourth">
+          <strong class="footer-links-column__title"
+            >A Footer Links List</strong
+          >
+          <ul class="footer-links-column__list">
+            <li class="footer-links-column__link">
+              <a href="#">A footer link</a>
+            </li>
+            <li class="footer-links-column__link">
+              <a href="#">A footer link</a>
+            </li>
+            <li class="footer-links-column__link">
+              <a href="#">A footer link</a>
+            </li>
+            <li class="footer-links-column__link">
+              <a href="#">A footer link</a>
+            </li>
+            <li class="footer-links-column__link">
+              <a href="#">A footer link</a>
+            </li>
+          </ul>
+        </div>
+        <div class="footer-links-column grid-item--one-fourth">
+          <strong class="footer-links-column__title"
+            >A Footer Links List</strong
+          >
+          <ul class="footer-links-column__list">
+            <li class="footer-links-column__link">
+              <a href="#">A footer link</a>
+            </li>
+            <li class="footer-links-column__link">
+              <a href="#">A footer link</a>
+            </li>
+            <li class="footer-links-column__link">
+              <a href="#">A footer link</a>
+            </li>
+            <li class="footer-links-column__link">
+              <a href="#">A footer link</a>
+            </li>
+            <li class="footer-links-column__link">
+              <a href="#">A footer link</a>
+            </li>
+          </ul>
+        </div>
+        <div class="footer-links-column grid-item--one-fourth">
+          <strong class="footer-links-column__title"
+            >A Footer Links List</strong
+          >
+          <ul class="footer-links-column__list">
+            <li class="footer-links-column__link">
+              <a href="#">A footer link</a>
+            </li>
+            <li class="footer-links-column__link">
+              <a href="#">A footer link</a>
+            </li>
+            <li class="footer-links-column__link">
+              <a href="#">A footer link</a>
+            </li>
+            <li class="footer-links-column__link">
+              <a href="#">A footer link</a>
+            </li>
+            <li class="footer-links-column__link">
+              <a href="#">A footer link</a>
+            </li>
+          </ul>
+        </div>
+        <div class="footer-links-column grid-item--one-fourth">
+          <strong class="footer-links-column__title"
+            >A Footer Links List</strong
+          >
+          <ul class="footer-links-column__list">
+            <li class="footer-links-column__link">
+              <a href="#">A footer link</a>
+            </li>
+            <li class="footer-links-column__link">
+              <a href="#">A footer link</a>
+            </li>
+            <li class="footer-links-column__link">
+              <a href="#">A footer link</a>
+            </li>
+            <li class="footer-links-column__link">
+              <a href="#">A footer link</a>
+            </li>
+            <li class="footer-links-column__link">
+              <a href="#">A footer link</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
