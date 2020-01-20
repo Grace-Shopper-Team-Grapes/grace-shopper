@@ -12,6 +12,50 @@
     ></script>
   </head>
   <body>
+    <div id="cart-modal-mask">
+      <div id="cart-modal-main">
+        <h1 class="cart-modal__title">Your Cart</h1>
+        <div class="cart-grid">
+          <div class="cart-grid__header">
+            <div class="grid-item--one-half">&nbsp;</div>
+            <div class="grid-item--one-fourth">Quantity</div>
+            <div class="grid-item--one-fourth">Total</div>
+          </div>
+          <div class="cart-grid__body">
+            <div class="cart-row">
+              <div class="cart-row__info grid-item--one-half">
+                <img class="cart-row__product-thumb" />
+                <div class="cart-row__product-text">
+                  Ornellaia 2014 (6L)
+                  <div class="cart-row__product-remove">
+                    <button class="btn btn--remove"><i class="fas fa-times"></i> Remove</button class="btn btn--remove">
+                  </div>
+                </div>
+              </div>
+              <div class="cart-row__product-quantity grid-item--one-fourth">
+                <input
+                  type="text"
+                  class="product-quantity__input"
+                  name="quantity"
+                  value="1"
+                />
+                <button name="procuct-quantity__increment">+</button>
+                <button name="procuct-quantity__decrement">-</button>
+              </div>
+              <div class="cart-row__product-subtotal grid-item--one-fourth">
+                $20.00
+              </div>
+            </div>
+          </div>
+        </div>
+        <br />
+        <a
+          href="#" style="position: absolute; top: -10px; right: -10px;"
+          onclick="javascript:document.getElementById('cart-modal-main').style.display='none';document.getElementById('cart-modal-mask').style.display='none';"
+          >Close Modal <i style="font-size: 1.6em; background-color: white; color: black; border-radius: 1.6em; " class="fas fa-times-circle"></i></a
+        >
+      </div>
+    </div>
     <header id="header">
       <div class="header__row header__row--one container">
         <div id="logo">
