@@ -1,15 +1,19 @@
-import React from 'react'
+import React from 'react';
 
-import {Navbar} from './components'
-import Routes from './routes'
+// import {Navbar} from './components'; -- Commented out to use components below.
+import {Header, Footer, Cart} from './components';
+import Routes from './routes';
 
 const App = () => {
   return (
     <div>
-      <Navbar />
+      {/* <Navbar /> */}
+      <Cart />
+      <Header />
       <Routes />
+      <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;

@@ -1,7 +1,10 @@
+/* General */
 @import './base/settings';
 @import './base/base';
 @import './base/grid';
+@import './base/forms';
 
+/* Component-related */
 @import './components/carousel';
 @import './components/cart-overlay';
 @import './components/container';

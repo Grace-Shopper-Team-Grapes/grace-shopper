@@ -1,10 +1,10 @@
 /* won't need to style the mask for react-modal */
 #cart-modal-mask {
+  display: none !important;
   width: 100vw;
   height: 100vh;
   position: fixed;
   z-index: 2000000000;
-  display: flex;
   justify-content: center;
   align-items: center;
   background-color: rgba($dark, 0.5);

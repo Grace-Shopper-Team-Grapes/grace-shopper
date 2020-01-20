@@ -7,3 +7,12 @@ export {default as Navbar} from './navbar';
 export {default as UserHome} from './user-home';
 export {Login, Signup} from './auth-form';
 export {default as DisplayAllProducts} from './DisplayAllProducts';
+
+/*
+ * ZK:
+ * Adding pass-through exports for my components.
+ * Will leave the above untouched until I'm sure this works.
+ */
+export {default as Header} from './template/Header';
+export {default as Footer} from './template/Footer';
+export {default as Cart} from './page/Cart';

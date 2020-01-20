@@ -1,0 +1,56 @@
+.form-container {
+  display: flex;
+  margin: $l-size;
+  flex-direction: column;
+
+  &--center {
+    justify-content: center;
+    align-items: center;
+  }
+
+  & > * {
+    margin-bottom: $s-size;
+  }
+
+  .login-form {
+    display: flex;
+    flex-flow: column wrap;
+
+    & > div {
+      margin-bottom: $s-size;
+    }
+  }
+}
+
+/* generic text field */
+.text__input {
+  flex-grow: 1;
+  background-color: #e7e6f6;
+  border: 1px solid $dark-purple;
+  border-bottom: 2px solid $dark-purple;
+  padding: 0.2rem $s-size 0.2rem;
+  font-size: 2rem;
+
+  &--center {
+    text-align: center;
+  }
+  &:focus {
+    background-color: #ffffff;
+  }
+}
+
+/* generic button */
+.btn {
+  font-weight: 500;
+  color: #e1f6f0;
+  padding: 0.9rem 2.2rem;
+  background-color: $medium-purple;
+  border-color: $medium-purple;
+  border-bottom: 2px solid $dark-purple;
+  cursor: pointer;
+  transition: background-color 500ms linear;
+
+  &:hover {
+    background-color: $dark-purple;
+  }
+}

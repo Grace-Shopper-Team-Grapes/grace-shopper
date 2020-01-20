@@ -35,18 +35,6 @@
 
         .pd-add-to-cart__quantity {
           width: $xl-size;
-          flex-grow: 1;
-          background-color: #e7e6f6;
-          border: 1px solid $dark-purple;
-          border-right: none;
-          border-bottom: 2px solid $dark-purple;
-          padding: 0.2rem $s-size 0.2rem;
-          font-size: 2rem;
-          text-align: center;
-
-          &:focus {
-            background-color: #ffffff;
-          }
         }
 
         .pd-add-to-cart__submit {
