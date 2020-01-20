@@ -46,7 +46,7 @@ export default class AddToCart extends Component {
         {...this.state}
         handleChange={this.handleChange}
         handleSubmit={this.handleSubmit}
-        name={this.props.name}
+        passedName={this.props.name}
       />
     );
   }

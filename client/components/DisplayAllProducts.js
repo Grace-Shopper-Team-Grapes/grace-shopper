@@ -14,6 +14,10 @@ class AllProducts extends React.Component {
     } else {
       return (
         <div>
+          <h1>
+            <Link to="/orderProducts">All Order Products</Link>
+          </h1>
+
           {this.props.products.map(product => {
             return (
               <div key={product.id}>

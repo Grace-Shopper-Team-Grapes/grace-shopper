@@ -29,6 +29,9 @@ class SingleProduct extends React.Component {
           <h5>
             <Link to="/products">Back to All Products</Link>
           </h5>
+          <h6>
+            <Link to="/orderProducts">All Order Products</Link>
+          </h6>
           <div>
             <AddToCart
               pid={product.id}
