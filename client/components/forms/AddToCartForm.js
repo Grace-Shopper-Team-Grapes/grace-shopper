@@ -1,5 +1,4 @@
 import React from 'react';
-
 const AddToCartForm = props => {
   return (
     <form id="addToCartForm" onSubmit={props.handleSubmit}>
@@ -9,7 +8,7 @@ const AddToCartForm = props => {
         name="name"
         onChange={props.handleChange}
         //below forces form to hold name
-        value={props.name || ''} // this condition fixes a warning
+        value={props.passedName || ''} // this condition fixes a warning
       />
 
       <label htmlFor="quantity">Quantity: </label>
@@ -21,7 +20,7 @@ const AddToCartForm = props => {
         value={props.quantity || ''} // this condition fixes a warning
       />
 
-      <button type="submit" disabled={!props.name || !props.quantity}>
+      <button type="submit" disabled={!props.passedName || !props.quantity}>
         Submit
       </button>
     </form>

@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const {User, Order, Product, OrderProduct} = require('../db/models');
 
+//NEED ROUTES TO DELETE AND CHANGE ORDER PROUCTS
+
 //GET ALL ORDERPRODUCTS OF CURRENT ORDER
 router.get('/', async (req, res, next) => {
   try {
