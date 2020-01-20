@@ -1,17 +1,18 @@
 import React from 'react';
 import MainNav from './MainNav';
+import {Link} from 'react-router-dom';
 
 const Header = () => (
   <header id="header">
     <div className="header__row header__row--one container">
       <div id="logo">
-        <a href="#">
+        <Link to="/">
           <span className="logo--grapes">Grapes</span>
           <span className="logo--shopper">Shopper</span>
-        </a>
+        </Link>
       </div>
       <div id="search">
-        <form className="search__form">
+        <form className="search__form" name="searchForm">
           <input
             name="searchInput"
             type="text"
@@ -29,14 +30,14 @@ const Header = () => (
       <div id="quick-links">
         <ul className="quick-links__list">
           <li className="quick-links__item">
-            <a href="#" className="quick-links__item-link">
+            <Link to="/login" className="quick-links__item-link">
               Login
-            </a>
+            </Link>
           </li>
           <li className="quick-links__item">
-            <a href="#" className="quick-links__item-link">
+            <Link to="/signup" className="quick-links__item-link">
               Signup
-            </a>
+            </Link>
           </li>
           <li className="quick-links__item">
             <a

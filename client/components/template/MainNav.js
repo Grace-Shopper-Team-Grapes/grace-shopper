@@ -1,20 +1,29 @@
 import React from 'react';
+import {NavLink} from 'react-router-dom';
 
 const MainNav = () => (
   <div className="header__row header__row--two nav-bar container">
     <nav className="main-nav">
-      <a href="#" className="main-nav__item">
+      <NavLink exact to="/" activeClassName="active" className="main-nav__item">
         Home
-      </a>
-      <a href="#" className="main-nav__item">
-        All Products
-      </a>
-      <a href="#" className="main-nav__item">
+      </NavLink>
+      <NavLink
+        to="/products"
+        activeClassName="active"
+        className="main-nav__item"
+      >
+        Products
+      </NavLink>
+      <NavLink
+        to="/categories"
+        activeClassName="active"
+        className="main-nav__item"
+      >
         Categories
-      </a>
-      <a href="#" className="main-nav__item">
+      </NavLink>
+      <NavLink to="about" activeClassName="active" className="main-nav__item">
         About
-      </a>
+      </NavLink>
     </nav>
   </div>
 );
