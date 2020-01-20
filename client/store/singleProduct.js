@@ -23,6 +23,7 @@ const gotSingleProduct = product => {
 /**
  * THUNK CREATORS
  */
+//FOR SLUGS
 export const getSingleProduct = slug => async dispatch => {
   try {
     const {data} = await axios.get('/api/products/' + slug);

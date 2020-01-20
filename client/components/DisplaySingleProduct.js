@@ -5,9 +5,6 @@ import {Link} from 'react-router-dom';
 import AddToCart from './forms/AddToCart';
 
 //NOTES: addToCart IS NOT PART OF THE REDUX STORE
-//IT DOES THE POST REQUEST AND THEN REDIRECTS
-//TO AN ENTIRELY NEW PAGE (SO PAGE RELOAD)
-//SO IT JUST PASSED ALONG AS A PROP
 
 class SingleProduct extends React.Component {
   componentDidMount() {

@@ -1,6 +1,21 @@
 const router = require('express').Router();
 const {User, Order, Product, OrderProduct} = require('../db/models');
 
+//GET CURRENT ORDER
+router.get('/currentOrder', async (req, res, next) => {
+  try {
+    const currentOrder = await Order.findOne({
+      where: {
+        userId: req.user.id,
+        isPurchased: false
+      }
+    });
+    req.json(currentOrder);
+  } catch (error) {
+    next(error);
+  }
+});
+
 //GET ALL ORDERS
 router.get('/', async (req, res, next) => {
   try {

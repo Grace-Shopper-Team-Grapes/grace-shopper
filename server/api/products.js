@@ -22,4 +22,15 @@ router.get('/:slug', async (req, res, next) => {
   }
 });
 
+//GET SPECIFIC PRODUCT BY ID (used on frontend orderProducts page to get inventory)
+//(this operation saves a whole other form set creation)
+router.get('/product/:id', async (req, res, next) => {
+  try {
+    const product = await Product.findByPk(req.params.id);
+    res.json(product);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
