@@ -19,3 +19,4 @@ export {default as Cart} from './page/Cart';
 
 /* Added by AV */
 export {default as DisplaySingleProduct} from './DisplaySingleProduct';
+export {default as DisplayAllOrderProducts} from './DisplayAllOrderProducts';

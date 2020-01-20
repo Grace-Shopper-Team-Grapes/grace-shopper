@@ -5,7 +5,6 @@ import history from '../history';
  * ACTION TYPES
  */
 const GOT_SINGLE_PRODUCT = 'GOT_SINGLE_PRODUCT';
-
 /**
  * INITIAL STATE
  */
@@ -24,6 +23,7 @@ const gotSingleProduct = product => {
 /**
  * THUNK CREATORS
  */
+//FOR SLUGS
 export const getSingleProduct = slug => async dispatch => {
   try {
     const {data} = await axios.get('/api/products/' + slug);

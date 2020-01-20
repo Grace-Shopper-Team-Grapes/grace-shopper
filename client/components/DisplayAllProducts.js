@@ -18,7 +18,9 @@ class AllProducts extends React.Component {
             return (
               <div key={product.id}>
                 <ul>
-                  <li>{product.name}</li>
+                  <li>
+                    <Link to={'/products/' + product.slug}>{product.name}</Link>
+                  </li>
                 </ul>
               </div>
             );

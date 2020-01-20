@@ -1,40 +1,32 @@
 const router = require('express').Router();
 const {User, Order, Product, OrderProduct} = require('../db/models');
-const {Sequelize} = require('sequelize');
 
-router.post('/', async (req, res, next) => {
+//GET CURRENT ORDER
+router.get('/currentOrder', async (req, res, next) => {
   try {
-    const pid = req.body.pid;
-    const pqty = req.body.pqty;
-    const product = await Product.findByPk(pid);
-    if (product.inventory > pqty) {
-      res.json(product);
-    }
-  } catch (e) {
-    next(e);
+    const currentOrder = await Order.findOne({
+      where: {
+        userId: req.user.id,
+        isPurchased: false
+      }
+    });
+    req.json(currentOrder);
+  } catch (error) {
+    next(error);
   }
 });
 
-router.put('/:pid/:pqty', async (req, res, next) => {
+//GET ALL ORDERS
+router.get('/', async (req, res, next) => {
   try {
-    const pid = req.params.pid;
-    const pqty = req.params.pqty;
-
-    const product = await Product.findOne({
+    const allOrders = await Order.findAll({
       where: {
-        id: pid,
-        inventory: {
-          $lte: pqty
-        }
+        userId: req.user.id
       }
     });
-    if (product) {
-      res.json(pqty);
-    } else {
-      throw new Error('Not enough product available.');
-    }
-  } catch (e) {
-    next(e);
+    res.json(allOrders);
+  } catch (error) {
+    next(error);
   }
 });
 
@@ -46,9 +38,11 @@ router.post('/addToCart', async (req, res, next) => {
     const product = await Product.findByPk(pid);
 
     //BELOW LINE SHOULD BE UNCOMMENTED FOR LIVE VERSION OF SITE
-    //const currentUser = req.user.id;
-    //FOR TESTING, USE NEXT LINE INSTEAD OF ABOVE
-    const currentUser = req.body.testId;
+    //AND FOR FRONT END TESTING
+    //REALLY, SHOULD BE THIS WAY FROM NOW ON
+    const currentUser = req.user.id;
+    //FOR BACKEND TESTING, USE NEXT LINE INSTEAD OF ABOVE
+    //const currentUser = req.body.testId;
 
     // CHECKS TO SEE IF THERE IS ENOUGH INVENTORY FOR REQUEST
     if (product.inventory >= pqty) {
@@ -98,7 +92,7 @@ router.post('/addToCart', async (req, res, next) => {
       await usersCart.update({
         grandTotal: grandTotal
       });
-      res.sendStatus(200);
+      res.json(200);
     } else {
       //OTHERWISE WE"RE OUT OF THE PRODUCT
       throw new Error('Not enough product available.');
