@@ -28,7 +28,7 @@ const Cart = () => (
                 type="text"
                 className="product-quantity__input"
                 name="quantity"
-                value="1"
+                defaultValue="1"
               />
               <button type="submit" name="procuct-quantity__increment">
                 +
