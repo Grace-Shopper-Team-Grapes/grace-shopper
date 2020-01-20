@@ -4,7 +4,8 @@ const db = require('../db');
 const Order = db.define('order', {
   grandTotal: {
     type: Sequelize.INTEGER,
-    allowNull: false
+    allowNull: false,
+    defaultValue: 0
   },
   isPurchased: {
     type: Sequelize.BOOLEAN,
@@ -16,13 +17,6 @@ const Order = db.define('order', {
     allowNull: false,
     defaultValue: false
   }
-});
-function financial(x) {
-  return Number(Number.parseFloat(x).toFixed(2));
-}
-
-Order.beforeValidate(order => {
-  order.grandTotal = financial(order.grandTotal * 100);
 });
 
 module.exports = Order;

@@ -16,3 +16,6 @@ export {default as DisplayAllProducts} from './DisplayAllProducts';
 export {default as Header} from './template/Header';
 export {default as Footer} from './template/Footer';
 export {default as Cart} from './page/Cart';
+
+/* Added by AV */
+export {default as DisplaySingleProduct} from './DisplaySingleProduct';

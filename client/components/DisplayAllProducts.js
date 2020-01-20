@@ -1,6 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {getAllProducts} from '../store/products';
+import {Link} from 'react-router-dom'; // make all names links to single product information
 
 class AllProducts extends React.Component {
   componentDidMount() {
