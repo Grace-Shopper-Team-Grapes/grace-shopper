@@ -1,15 +1,13 @@
 import React, {Component} from 'react';
-import axios from 'axios';
 import EditCartForm from './EditCartForm';
 
 const defaultState = {
-  id: 0,
-  quantity: 0
+  quantity: ''
 };
 
 export default class EditCart extends Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = defaultState;
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -21,21 +19,14 @@ export default class EditCart extends Component {
     });
   }
 
-  async handleSubmit(event) {
+  handleSubmit(event) {
     event.preventDefault();
     try {
-      if (Number(this.state.quantity) > Number(this.props.inventory)) {
-        window.alert(`not enough inventory`);
-      } else {
-        await axios.put('/api/orders', {
-          productId: this.props.productId,
-          productQty: this.state.quantity
-        });
-      }
+      this.props.editCart({...this.state});
       this.setState(defaultState);
     } catch (err) {
       this.setState({
-        errorMessage: `problem updating cart: ${err.message}`
+        errorMessage: `problem updating Cart: ${err.message}`
       });
     }
   }

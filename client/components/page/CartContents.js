@@ -23,7 +23,8 @@ class CartContents extends React.Component {
     this.props.getAllOrderProducts();
   }
 
-  handleRemove(productId) {
+  handleRemove(event, productId) {
+    console.log('in handleRemove', productId);
     this.props.removeOrderProduct(productId);
   }
 
@@ -43,9 +44,9 @@ class CartContents extends React.Component {
     this.setState(prevState => {
       // I need to deep-copy the orderProducts array so I don't mutate the previous state.
       console.log(prevState);
-      prevState.orderProducts.forEach(item => {
-        if (item.productId === productId) {
-          item[event.target.name] = newQty;
+      prevState.orderProducts.forEach(orderProduct => {
+        if (item.id === productId) {
+          orderProduct[event.target.name] = newQty;
         }
       });
       return [...prevState];
@@ -56,12 +57,14 @@ class CartContents extends React.Component {
     this.props.updateOrderProduct(productId, event.target.value);
   }
   handleIncrement(event, productId) {
-    const inputValue = event.target.parentNode.firstChild.value;
-    this.props.updateOrderProduct(productId, inputValue + 1);
+    console.log('our props: ', this.props);
+    const currQty = this.props.orderProducts[productId];
+    // this.props.updateOrderProduct(productId, currQty);
   }
-  handleDecrement(event, productId) {
+  async handleDecrement(event, productId) {
     const inputValue = event.target.parentNode.firstChild.value;
-    this.props.updateOrderProduct(productId, inputValue - 1);
+    await this.props.updateOrderProduct(productId, inputValue - 1);
+    event.target.parentNode.firstChild.value--;
   }
 
   render() {
@@ -90,7 +93,7 @@ class CartContents extends React.Component {
                 <button
                   type="submit"
                   className="btn btn--remove"
-                  onClick={() => this.handleRemove(item.id)}
+                  onClick={e => this.handleRemove(e, item.id)}
                 >
                   <i className="fas fa-times" /> Remove
                 </button>

@@ -1,18 +1,16 @@
 import React from 'react';
+/*
+  quantity: ''
+*/
 const EditCartForm = props => {
   return (
-    <form id="editCartForm" onSubmit={props.handleSubmit}>
-      <label htmlFor="quantity">Quantity: </label>
-      <input
-        type="text"
-        name="quantity"
-        onChange={props.handleChange}
-        placeholder="1"
-        value={props.quantity || ''} // this condition fixes a warning
-      />
-
-      <button type="submit">Submit</button>
-    </form>
+    <input
+      type="text"
+      name="quantity"
+      onChange={props.handleChange}
+      onBlur={props.handleSubmit}
+      value={props.quantity}
+    />
   );
 };
 
