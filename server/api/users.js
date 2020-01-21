@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const {User, Order, OrderProduct, Product} = require('../db/models');
+const {isAdmin} = require('./routeProtections');
 module.exports = router;
 
 //ACCOUNT PAGE FOR USER
@@ -46,7 +47,7 @@ router.put('/account', async (req, res, next) => {
 });
 
 // ADMIN ONLY BELOW
-router.get('/', async (req, res, next) => {
+router.get('/', isAdmin, async (req, res, next) => {
   try {
     const users = await User.findAll({
       // explicitly select only the id and email fields - even though
