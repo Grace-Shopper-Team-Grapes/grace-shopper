@@ -19,9 +19,10 @@ class AllOrderProducts extends React.Component {
           <h1>
             <Link to="/products">All Products</Link>
           </h1>
-          {orderProducts.map(orderProduct => {
+          {orderProducts.map((orderProduct, idx) => {
+            const thisKey = orderProduct + idx;
             return (
-              <div key={orderProduct.productId}>
+              <div key={thisKey}>
                 <ul>
                   <li>
                     quantity: {orderProduct.quantity}, price:
