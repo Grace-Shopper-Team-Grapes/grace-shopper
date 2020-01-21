@@ -1,6 +1,33 @@
 const router = require('express').Router();
 const {User, Order, Product, OrderProduct} = require('../db/models');
 
+const buildCartProducts = async orderId => {
+  const allProducts = await Product.findAll({});
+  const cartItems = await OrderProduct.findAll({
+    where: {
+      orderId
+    }
+  });
+
+  // let cartProduct = {};
+  let cartProductDetails = cartItems.map(orderProduct => {
+    let thisProduct = {};
+    allProducts.forEach(product => {
+      if (product.id === orderProduct.productId) {
+        thisProduct.id = product.id;
+        thisProduct.name = product.name;
+        thisProduct.slug = product.slug;
+        thisProduct.imageUrl = product.imageUrl;
+        thisProduct.price = orderProduct.price;
+        thisProduct.quantity = orderProduct.quantity;
+      }
+    });
+    return thisProduct;
+  });
+
+  return cartProductDetails;
+};
+
 // CART
 // ----
 // RESTful approach is to use GET, POST, PUT, and DELETE
@@ -14,15 +41,16 @@ const {User, Order, Product, OrderProduct} = require('../db/models');
 // Cart - View all items in Cart
 router.get('/', async (req, res, next) => {
   try {
-    const orderWithProducts = await Order.findOne({
+    const userCart = await Order.findOne({
       where: {
         userId: req.user.id,
         isPurchased: false
-      },
-      include: [{model: OrderProduct}]
+      }
     });
 
-    res.json(orderWithProducts);
+    const cartProducts = await buildCartProducts(userCart.id);
+
+    res.json({userCart, orderProducts: cartProducts});
   } catch (error) {
     next(error);
   }
@@ -83,7 +111,9 @@ router.post('/', async (req, res, next) => {
       await userCart.update({
         grandTotal: grandTotal
       });
-      res.json(userCart);
+
+      console.log(userCart);
+      res.json(userCart.orderProducts);
     } else {
       //OTHERWISE WE'RE OUT OF THE PRODUCT
       throw new Error('Not enough product available.');
@@ -120,7 +150,7 @@ router.put('/', async (req, res, next) => {
         return item;
       });
 
-      res.json(userCart);
+      res.json(userCart.orderProducts);
     }
   } catch (error) {
     next(error);
@@ -151,7 +181,7 @@ router.delete('/', async (req, res, next) => {
     });
 
     // Cart gets automatically updated -- return it
-    res.json(userCart);
+    res.json(userCart.orderProducts);
   } catch (error) {
     next(error);
   }

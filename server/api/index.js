@@ -5,7 +5,8 @@ router.use('/users', require('./users'));
 router.use('/orders', require('./orders'));
 router.use('/categories', require('./categories'));
 router.use('/products', require('./products'));
-router.use('/orderProducts', require('./orderProducts'));
+// Removed following route, we won't be using it:
+// router.use('/orderProducts', require('./orderProducts'));
 
 router.use((req, res, next) => {
   const error = new Error('Not Found');

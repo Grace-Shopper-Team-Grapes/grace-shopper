@@ -1,4 +1,6 @@
 import React from 'react';
+import {DisplayAllOrderProducts} from '..';
+import CartContents from './CartContents';
 
 const Cart = () => (
   <div id="cart-modal-mask">
@@ -11,36 +13,8 @@ const Cart = () => (
           <div className="grid-item--one-fourth">Total</div>
         </div>
         <div className="cart-grid__body">
-          <div className="cart-row">
-            <div className="cart-row__info grid-item--one-half">
-              <img className="cart-row__product-thumb" />
-              <div className="cart-row__product-text">
-                Ornellaia 2014 (6L)
-                <div className="cart-row__product-remove">
-                  <button type="submit" className="btn btn--remove">
-                    <i className="fas fa-times" /> Remove
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div className="cart-row__product-quantity grid-item--one-fourth">
-              <input
-                type="text"
-                className="product-quantity__input"
-                name="quantity"
-                defaultValue="1"
-              />
-              <button type="submit" name="procuct-quantity__increment">
-                +
-              </button>
-              <button type="submit" name="procuct-quantity__decrement">
-                -
-              </button>
-            </div>
-            <div className="cart-row__product-subtotal grid-item--one-fourth">
-              $20.00
-            </div>
-          </div>
+          {/* <DisplayAllOrderProducts /> */}
+          <CartContents />
         </div>
       </div>
       <br />

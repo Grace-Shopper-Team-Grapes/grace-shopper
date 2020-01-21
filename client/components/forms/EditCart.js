@@ -27,7 +27,7 @@ export default class EditCart extends Component {
       if (Number(this.state.quantity) > Number(this.props.inventory)) {
         window.alert(`not enough inventory`);
       } else {
-        await axios.put('/api/orderProducts', {
+        await axios.put('/api/orders', {
           productId: this.props.productId,
           productQty: this.state.quantity
         });
