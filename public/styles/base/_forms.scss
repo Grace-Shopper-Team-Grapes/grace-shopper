@@ -53,4 +53,17 @@
   &:hover {
     background-color: $dark-purple;
   }
+
+  &--remove {
+    color: $medium-purple;
+    background: none;
+    border: none;
+    padding: 0;
+
+    &:hover {
+      color: $dark-purple;
+      background: none;
+      border: none;
+    }
+  }
 }

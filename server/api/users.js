@@ -46,6 +46,8 @@ router.get('/:id/orders', async (req, res, next) => {
 });
 
 // Get all cart items
+
+// NOTE (from ZK): THIS should be removed -- retrieving user cart should be done via GET @ /orders
 router.get('/:id/orderProducts', async (req, res, next) => {
   try {
     const notPurchasedOrder = await Order.findOne({

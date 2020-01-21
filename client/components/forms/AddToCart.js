@@ -27,7 +27,7 @@ export default class AddToCart extends Component {
       if (Number(this.state.quantity) > Number(this.props.inventory)) {
         window.alert(`not enough inventory`);
       } else {
-        await axios.post('/api/orderProducts', {
+        await axios.post('/api/orders', {
           productId: this.props.productId,
           productQty: this.state.quantity
         });
