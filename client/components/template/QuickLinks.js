@@ -1,13 +1,28 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
+import {logout} from '../../store';
 
-const QuickLinks = () => (
+const QuickLinks = ({handleClick, isLoggedIn}) => (
   <div id="quick-links">
     <ul className="quick-links__list">
       <li className="quick-links__item">
-        <Link to="/login" className="quick-links__item-link">
-          Login
-        </Link>
+        {isLoggedIn ? (
+          <div>
+            <a
+              className="quick-links__item-link"
+              href="#"
+              onClick={handleClick}
+            >
+              Logout
+            </a>
+          </div>
+        ) : (
+          <Link to="/login" className="quick-links__item-link">
+            Login
+          </Link>
+        )}
       </li>
       <li className="quick-links__item">
         <Link to="/signup" className="quick-links__item-link">
@@ -31,4 +46,29 @@ const QuickLinks = () => (
   </div>
 );
 
-export default QuickLinks;
+/**
+ * CONTAINER
+ */
+const mapState = state => {
+  return {
+    isLoggedIn: !!state.user.id
+  };
+};
+
+const mapDispatch = dispatch => {
+  return {
+    handleClick() {
+      dispatch(logout());
+    }
+  };
+};
+
+export default connect(mapState, mapDispatch)(QuickLinks);
+
+/**
+ * PROP TYPES
+ */
+QuickLinks.propTypes = {
+  handleClick: PropTypes.func.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired
+};
