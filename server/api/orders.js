@@ -1,22 +1,166 @@
 const router = require('express').Router();
 const {User, Order, Product, OrderProduct} = require('../db/models');
 
-//GET CURRENT ORDER
-router.get('/currentOrder', async (req, res, next) => {
+// CART
+// ----
+// RESTful approach is to use GET, POST, PUT, and DELETE
+// to View, Add, Edit, and Remove, respectfully.
+// So:
+// GET    / => VIEW Cart
+// POST   / => ADD to Cart
+// PUT    / => EDIT item in Cart
+// DELETE / => REMOVE item from Cart
+
+// Cart - View all items in Cart
+router.get('/', async (req, res, next) => {
   try {
-    const currentOrder = await Order.findOne({
+    const orderWithProducts = await Order.findOne({
       where: {
         userId: req.user.id,
         isPurchased: false
-      }
+      },
+      include: [{model: OrderProduct}]
     });
-    req.json(currentOrder);
+
+    res.json(orderWithProducts);
   } catch (error) {
     next(error);
   }
 });
 
-//GET ALL ORDERS
+// Cart - Add to cart
+router.post('/', async (req, res, next) => {
+  try {
+    const productId = req.body.productId;
+    const productQty = req.body.productQty;
+
+    const product = await Product.findByPk(productId);
+
+    const currentUser = req.user.id;
+
+    // Check inventory levels before adding to cart
+    if (product.inventory >= productQty) {
+      // Get cart
+      const userCart = await Order.findOne({
+        where: {
+          userId: currentUser,
+          isPurchased: false
+        },
+        include: [{model: OrderProduct}]
+      });
+
+      //FIND OR CREATE ORDER PRODUCT
+      await OrderProduct.findOrCreate({
+        where: {orderId: userCart.id, productId},
+        defaults: {
+          orderId: userCart.id,
+          productId,
+          price: Number(product.price),
+          quantity: Number(productQty)
+        }
+      }).spread(function(orderProduct, created) {
+        if (!created) {
+          orderProduct.update({
+            quantity: Number(productQty) + orderProduct.quantity
+          });
+        }
+      });
+
+      //GET ALL ORDERPRODUCTS
+      const allOrderProducts = await OrderProduct.findAll({
+        where: {
+          orderId: userCart.id
+        }
+      });
+
+      //ACCUMULATE GRAND TOTAL
+      let grandTotal = 0;
+      allOrderProducts.forEach(orderProduct => {
+        grandTotal += orderProduct.price * orderProduct.quantity;
+      });
+
+      //UPDATE ORDER GRANDTOTAL
+      await userCart.update({
+        grandTotal: grandTotal
+      });
+      res.json(userCart);
+    } else {
+      //OTHERWISE WE'RE OUT OF THE PRODUCT
+      throw new Error('Not enough product available.');
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Cart - Edit Cart item
+router.put('/', async (req, res, next) => {
+  try {
+    const productId = req.body.productId;
+    const productQty = req.body.productQty;
+    const product = await Product.findByPk(productId);
+    const currentUser = req.user.id;
+
+    // Check inventory level for requested amount
+    if (product.inventory >= productQty) {
+      // Get Cart
+      const userCart = await Order.findOne({
+        where: {
+          userId: currentUser,
+          isPurchased: false
+        },
+        include: [{model: OrderProduct}]
+      });
+
+      userCart.orderProducts.map(item => {
+        if (+item.productId === +productId) {
+          item.quantity = +productQty;
+          item.save();
+        }
+        return item;
+      });
+
+      res.json(userCart);
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Cart - Delete Cart item
+router.delete('/', async (req, res, next) => {
+  try {
+    const productId = +req.body.productId;
+    const currentUser = req.user.id;
+
+    // Get cart
+    const userCart = await Order.findOne({
+      where: {
+        userId: currentUser,
+        isPurchased: false
+      },
+      include: [{model: OrderProduct}]
+    });
+
+    // Delete item from cart
+    OrderProduct.destroy({
+      where: {
+        orderId: +userCart.id,
+        productId
+      }
+    });
+
+    // Cart gets automatically updated -- return it
+    res.json(userCart);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// ======================
+// Users - Order History
+
+// Get a User's order history
 router.get('/', async (req, res, next) => {
   try {
     const allOrders = await Order.findAll({
@@ -30,79 +174,8 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-//ADD TO CART
-router.post('/addToCart', async (req, res, next) => {
-  try {
-    const pid = req.body.pid;
-    const pqty = req.body.pqty;
-    const product = await Product.findByPk(pid);
-
-    //BELOW LINE SHOULD BE UNCOMMENTED FOR LIVE VERSION OF SITE
-    //AND FOR FRONT END TESTING
-    //REALLY, SHOULD BE THIS WAY FROM NOW ON
-    const currentUser = req.user.id;
-    //FOR BACKEND TESTING, USE NEXT LINE INSTEAD OF ABOVE
-    //const currentUser = req.body.testId;
-
-    // CHECKS TO SEE IF THERE IS ENOUGH INVENTORY FOR REQUEST
-    if (product.inventory >= pqty) {
-      // GET CART
-      const usersCart = await Order.findOne({
-        where: {
-          userId: currentUser,
-          isPurchased: false
-        }
-      });
-
-      //FIND OR CREATE ORDER PRODUCT
-      await OrderProduct.findOrCreate({
-        where: {orderId: usersCart.id, productId: pid},
-        defaults: {
-          orderId: usersCart.id,
-          productId: pid,
-          price: Number(product.price),
-          quantity: Number(pqty)
-        }
-      }).spread(function(orderProduct, created) {
-        if (!created) {
-          orderProduct.update({
-            //depending on implementation, either:
-            //FOR FORM:
-            quantity: Number(pqty)
-            //OR other style:
-            // quantity: Number(pqty) + orderProduct.quantity
-          });
-        }
-      });
-
-      //GET ALL ORDERPRODUCTS
-      const allOrderProducts = await OrderProduct.findAll({
-        where: {
-          orderId: usersCart.id
-        }
-      });
-
-      //ACCUMULATE GRAND TOTAL
-      let grandTotal = 0;
-      allOrderProducts.forEach(orderProduct => {
-        grandTotal += orderProduct.price * orderProduct.quantity;
-      });
-
-      //UPDATE ORDER GRANDTOTAL
-      await usersCart.update({
-        grandTotal: grandTotal
-      });
-      res.json(200);
-    } else {
-      //OTHERWISE WE"RE OUT OF THE PRODUCT
-      throw new Error('Not enough product available.');
-    }
-  } catch (error) {
-    next(error);
-  }
-});
-
 //CHECKOUT
+/* From ZK: Why do we need :userId here? This should be on the session */
 router.get('/checkout/:userId', async (req, res, next) => {
   try {
     //req.user.id equivalent should be found on the frontend and then
@@ -180,7 +253,15 @@ router.get('/checkout/:userId', async (req, res, next) => {
   }
 });
 
-//SHIPPED (for admin only)
+// Admins - Order Management
+
+// View all Orders
+
+// View a Single Order
+// - Note: Not necessary for MVP
+
+// Ship a Single Order
+// - Note: Not necessary for MVP
 router.get('/ship/:orderId', async (req, res, next) => {
   try {
     //req.user.id equivalent should be found on the frontend.
@@ -198,3 +279,43 @@ router.get('/ship/:orderId', async (req, res, next) => {
 });
 
 module.exports = router;
+
+/*
+The following code can be used to retrieve a model's association methods:
+const model = Order;
+for (let assoc of Object.keys(model.associations)) {
+  for (let accessor of Object.keys(model.associations[assoc].accessors)) {
+    console.log(
+      model.name +
+        '.' +
+        model.associations[assoc].accessors[accessor] +
+        '()'
+    );
+  }
+}
+
+The following is a list of Order model association methods:
+order.getUser()
+order.setUser()
+order.createUser()
+order.getOrderProducts()
+order.setOrderProducts()
+order.addOrderProducts()
+order.addOrderProduct()
+order.createOrderProduct()
+order.removeOrderProduct()
+order.removeOrderProducts()
+order.hasOrderProduct()
+order.hasOrderProducts()
+order.countOrderProducts()
+order.getProducts()
+order.setProducts()
+order.addProducts()
+order.addProduct()
+order.createProduct()
+order.removeProduct()
+order.removeProducts()
+order.hasProduct()
+order.hasProducts()
+order.countProducts()
+*/

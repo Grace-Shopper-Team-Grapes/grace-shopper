@@ -97,7 +97,9 @@ const setSaltAndPassword = user => {
 };
 
 const validatePhone = user => {
-  user.phone = +user.phone.replace(/\D/g, '');
+  if (user.phone) {
+    user.phone = +user.phone.replace(/\D/g, '');
+  }
 };
 
 User.beforeValidate(validatePhone);
