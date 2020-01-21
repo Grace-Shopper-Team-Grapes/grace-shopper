@@ -8,7 +8,7 @@ curl -i -X PUT -H 'Content-Type: application/json' -d '{
     "password":"123",
     "googleId":"bobo"} ' http://localhost:8080/api/account/1
 //ADD TO CART
-curl -i -X POST -H 'Content-Type: application/json' -d '{"testId":"1", "pid":"1", "pqty":2}' http://localhost:8080/api/orders/addToCart
+curl -i -X POST -H 'Content-Type: application/json' -d '{"testId":"1", "productId":"1", "productQty":2}' http://localhost:8080/api/orderProducts/add
 
 
 //FOR REFERENCE

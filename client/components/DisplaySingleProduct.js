@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {getSingleProduct} from '../store/singleProduct';
 import {Link} from 'react-router-dom';
 import AddToCart from './forms/AddToCart';
+import EditCart from './forms/EditCart';
 
 //NOTES: addToCart IS NOT PART OF THE REDUX STORE
 
@@ -34,7 +35,14 @@ class SingleProduct extends React.Component {
           </h6>
           <div>
             <AddToCart
-              pid={product.id}
+              productId={product.id}
+              inventory={product.inventory}
+              name={product.name}
+            />
+          </div>
+          <div>
+            <EditCart
+              productId={product.id}
               inventory={product.inventory}
               name={product.name}
             />
