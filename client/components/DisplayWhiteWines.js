@@ -16,7 +16,7 @@ class WhiteWines extends React.Component {
         <div>
           <h1 align="center">White Wines</h1>
           {this.props.whiteWines.map(whiteWine => {
-            if (whiteWine.id >= 5) {
+            if (whiteWine.id >= 13) {
               return (
                 <div key={whiteWine.id}>
                   <img

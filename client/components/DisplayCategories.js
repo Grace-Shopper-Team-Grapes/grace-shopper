@@ -23,8 +23,8 @@ class AllCategories extends React.Component {
               <div key={category.id}>
                 <img
                   src={category.imageUrl}
-                  width="35%"
-                  height="35%"
+                  width="15%"
+                  height="15%"
                   onClick={() =>
                     (window.location.href = `./categories/${category.slug}`)
                   }
