@@ -25,9 +25,15 @@ const QuickLinks = ({handleClick, isLoggedIn}) => (
         )}
       </li>
       <li className="quick-links__item">
-        <Link to="/signup" className="quick-links__item-link">
-          Signup
-        </Link>
+        {isLoggedIn ? (
+          <Link to="/account" className="quick-links__item-link">
+            My Account
+          </Link>
+        ) : (
+          <Link to="/signup" className="quick-links__item-link">
+            Signup
+          </Link>
+        )}
       </li>
       <li className="quick-links__item">
         <a
