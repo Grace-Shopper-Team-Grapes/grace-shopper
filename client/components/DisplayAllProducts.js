@@ -21,11 +21,21 @@ class AllProducts extends React.Component {
           {this.props.products.map(product => {
             return (
               <div key={product.id}>
-                <ul>
+                <img
+                  src={product.imageUrl}
+                  align="left"
+                  alt="Product Image"
+                  width="50%"
+                  height="50%"
+                  onClick={() =>
+                    (window.location.href = `./products/${product.slug}`)
+                  }
+                />
+                {/* <ul>
                   <li>
                     <Link to={'/products/' + product.slug}>{product.name}</Link>
                   </li>
-                </ul>
+                </ul> */}
               </div>
             );
           })}

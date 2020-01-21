@@ -8,6 +8,9 @@ import {
   Signup,
   UserHome,
   DisplayAllProducts,
+  DisplayCategories,
+  DisplayWhiteWines,
+  DisplayRedWines,
   DisplaySingleProduct,
   DisplayAllOrderProducts
 } from './components';
@@ -32,6 +35,9 @@ class Routes extends Component {
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
         <Route path="/products" component={DisplayAllProducts} />
+        <Route path="/categories/white" component={DisplayWhiteWines} />
+        <Route path="/categories/red" component={DisplayRedWines} />
+        <Route path="/categories" component={DisplayCategories} />
         <Route path="/orderProducts" component={DisplayAllOrderProducts} />
         <Route path="/" exact component={Homepage} />
 
