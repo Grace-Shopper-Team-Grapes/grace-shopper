@@ -24,9 +24,35 @@ class SingleProduct extends React.Component {
       const product = this.props.product;
       return (
         <div>
-          <h1>name: {product.name}</h1>
-          <h2>price: {product.price / 100}</h2>
-          <h3>inventory: {product.inventory}</h3>
+          <h5>
+            <Link to="/products">Back to All Products</Link>
+            <br />
+            <Link to="/orderProducts">All Order Products</Link>
+          </h5>
+          <img
+            src={product.imageUrl}
+            align="left"
+            alt="Product Image"
+            width="50%"
+            height="50%"
+          />
+          <h2 margin-left="10px">Price: ${product.price / 100}</h2>
+          <h3>Inventory: {product.inventory}</h3>
+          <h4>{product.description}</h4>
+
+          <div>
+            <AddToCart
+              pid={product.id}
+              inventory={product.inventory}
+              name={product.name}
+            />
+          </div>
+
+          {/* <h1>{product.name}</h1>
+          <img src={product.imageUrl} width="200" height="600"/>
+          <h2>Price: {product.price / 100}</h2>
+          <h3>Inventory: {product.inventory}</h3>
+          <h4>{product.description}</h4>
           <h5>
             <Link to="/products">Back to All Products</Link>
           </h5>
@@ -46,7 +72,7 @@ class SingleProduct extends React.Component {
               inventory={product.inventory}
               name={product.name}
             />
-          </div>
+          </div> */}
         </div>
       );
     }

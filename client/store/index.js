@@ -6,6 +6,9 @@ import user from './user';
 import products from './products';
 import singleProduct from './singleProduct';
 import orderProducts from './orderProducts';
+import categories from './categories';
+import redWines from './redWines';
+import whiteWines from './whiteWines';
 import account from './account';
 
 const reducer = combineReducers({
@@ -13,6 +16,9 @@ const reducer = combineReducers({
   products,
   product: singleProduct,
   orderProducts,
+  categories,
+  redWines,
+  whiteWines,
   account
 });
 const middleware = composeWithDevTools(
@@ -25,4 +31,7 @@ export * from './user';
 export * from './products';
 export * from './singleProduct';
 export * from './orderProducts';
+export * from './categories';
+export * from './redWines';
+export * from './whiteWines';
 export * from './account';

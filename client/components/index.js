@@ -21,3 +21,8 @@ export {default as Homepage} from './page/Homepage';
 /* Added by AV */
 export {default as DisplaySingleProduct} from './DisplaySingleProduct';
 export {default as DisplayAllOrderProducts} from './DisplayAllOrderProducts';
+
+// Added by KC
+export {default as DisplayCategories} from './DisplayCategories';
+export {default as DisplayRedWines} from './DisplayRedWines';
+export {default as DisplayWhiteWines} from './DisplayWhiteWines';

@@ -15,10 +15,10 @@ describe('Order model', () => {
 
     beforeEach(async () => {
       order1 = await Order.create({
-        grandTotal: 50.0
+        grandTotal: 5000
       });
       order2 = await Order.create({
-        grandTotal: 79.99,
+        grandTotal: 7999,
         isPurchased: true,
         isShipped: true
       });
@@ -39,10 +39,10 @@ describe('Order model', () => {
 
     beforeEach(async () => {
       order1 = await Order.create({
-        grandTotal: 50.0
+        grandTotal: 5000
       });
       order2 = await Order.create({
-        grandTotal: 79.99,
+        grandTotal: 7999,
         isPurchased: true,
         isShipped: false
       });
