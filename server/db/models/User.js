@@ -96,11 +96,11 @@ const setSaltAndPassword = user => {
   }
 };
 
-const validatePhone = user => {
-  user.phone = +user.phone.replace(/\D/g, '');
-};
+// const validatePhone = user => {
+//   user.phone = +user.phone.replace(/\D/g, '');
+// };
 
-User.beforeValidate(validatePhone);
+// User.beforeValidate(validatePhone);
 User.beforeCreate(setSaltAndPassword);
 User.beforeUpdate(setSaltAndPassword);
 User.beforeBulkCreate(users => {
