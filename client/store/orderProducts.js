@@ -77,7 +77,6 @@ export const updateOrderProduct = (productId, productQty) => async dispatch => {
 };
 export const removeOrderProduct = productId => async dispatch => {
   try {
-    console.log('product id in the thunk is ', productId);
     const {data} = await axios.delete('/api/orders', {
       data: {
         productId

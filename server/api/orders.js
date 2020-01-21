@@ -10,7 +10,6 @@ const buildCartProducts = async orderId => {
   });
 
   // let cartProduct = {};
-
   let cartProductDetails = cartItems.map(orderProduct => {
     let thisProduct = {};
     allProducts.forEach(product => {
@@ -125,68 +124,41 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-// Cart - Edit Cart Item - using functional componenet
-router.put('/edit', async (req, res, next) => {
+// Cart - Edit Cart item
+router.put('/', async (req, res, next) => {
   try {
-    const orderId = await Order.findOne({
-      where: {
-        id: req.user.id,
-        isPurchased: false
-      }
-    });
+    const productId = req.body.productId;
+    const productQty = req.body.productQty;
+    const product = await Product.findByPk(productId);
+    const currentUser = req.user.id;
 
-    const updated = await OrderProduct.update(
-      {...req.body},
-      {
+    // Check inventory level for requested amount
+    if (product.inventory >= productQty) {
+      // Get Cart
+      const userCart = await Order.findOne({
         where: {
-          orderId,
-          productId: req.body.productId
-        }
-      }
-    );
+          userId: currentUser,
+          isPurchased: false
+        },
+        include: [{model: OrderProduct}]
+      });
 
-    if (!updated) res.sendStatus(400);
-    else res.sendStatus(202);
+      userCart.orderProducts.map(item => {
+        if (+item.productId === +productId) {
+          item.quantity = +productQty;
+          item.save();
+        }
+        return item;
+      });
+
+      const cartProducts = await buildCartProducts(userCart.id);
+
+      res.json({userCart, orderProducts: cartProducts});
+    }
   } catch (error) {
     next(error);
   }
 });
-
-// Cart - Edit Cart item
-// router.put('/', async (req, res, next) => {
-//   try {
-//     const productId = req.body.productId;
-//     const productQty = req.body.productQty;
-//     const product = await Product.findByPk(productId);
-//     const currentUser = req.user.id;
-
-//     // Check inventory level for requested amount
-//     if (product.inventory >= productQty) {
-//       // Get Cart
-//       const userCart = await Order.findOne({
-//         where: {
-//           userId: currentUser,
-//           isPurchased: false
-//         },
-//         include: [{model: OrderProduct}]
-//       });
-
-//       userCart.orderProducts.map(item => {
-//         if (+item.productId === +productId) {
-//           item.quantity = +productQty;
-//           item.save();
-//         }
-//         return item;
-//       });
-
-//       const cartProducts = await buildCartProducts(userCart.id);
-
-//       res.json({userCart, orderProducts: cartProducts});
-//     }
-//   } catch (error) {
-//     next(error);
-//   }
-// });
 
 // Cart - Delete Cart item
 router.delete('/', async (req, res, next) => {

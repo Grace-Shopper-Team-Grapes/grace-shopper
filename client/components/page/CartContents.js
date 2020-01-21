@@ -11,7 +11,7 @@ import {
 class CartContents extends React.Component {
   constructor(props) {
     super(props);
-    this.state = [{}];
+    this.state = {};
     this.handleRemove = this.handleRemove.bind(this);
     this.handleQuantityChange = this.handleQuantityChange.bind(this);
     this.handleQuantitySubmit = this.handleQuantitySubmit.bind(this);
@@ -24,7 +24,6 @@ class CartContents extends React.Component {
   }
 
   handleRemove(event, productId) {
-    console.log('in handleRemove', productId);
     this.props.removeOrderProduct(productId);
   }
 
@@ -43,7 +42,6 @@ class CartContents extends React.Component {
 
     this.setState(prevState => {
       // I need to deep-copy the orderProducts array so I don't mutate the previous state.
-      console.log(prevState);
       prevState.orderProducts.forEach(orderProduct => {
         if (item.id === productId) {
           orderProduct[event.target.name] = newQty;
@@ -54,10 +52,10 @@ class CartContents extends React.Component {
   }
 
   handleQuantitySubmit(event, productId) {
+    console.log('handle qty submit', productId, event.target);
     this.props.updateOrderProduct(productId, event.target.value);
   }
   handleIncrement(event, productId) {
-    console.log('our props: ', this.props);
     const currQty = this.props.orderProducts[productId];
     // this.props.updateOrderProduct(productId, currQty);
   }
@@ -75,7 +73,6 @@ class CartContents extends React.Component {
         </div>
       );
     } else {
-      console.log(this.props);
       const orderProducts = this.props.orderProducts;
       return orderProducts.map(item => (
         <div key={item.id} className="cart-row">
@@ -106,7 +103,7 @@ class CartContents extends React.Component {
               className="product-quantity__input"
               name="quantity"
               defaultValue={item.quantity}
-              onChange={e => this.handleQuantityChange(e, item.id)}
+              // onChange={e => this.handleQuantityChange(e, item.id)}
               onBlur={e => this.handleQuantitySubmit(e, item.id)}
             />
             <button
