@@ -112,8 +112,9 @@ router.post('/', async (req, res, next) => {
         grandTotal: grandTotal
       });
 
-      console.log(userCart);
-      res.json(userCart.orderProducts);
+      const cartProducts = await buildCartProducts(userCart.id);
+
+      res.json({userCart, orderProducts: cartProducts});
     } else {
       //OTHERWISE WE'RE OUT OF THE PRODUCT
       throw new Error('Not enough product available.');
@@ -150,7 +151,9 @@ router.put('/', async (req, res, next) => {
         return item;
       });
 
-      res.json(userCart.orderProducts);
+      const cartProducts = await buildCartProducts(userCart.id);
+
+      res.json({userCart, orderProducts: cartProducts});
     }
   } catch (error) {
     next(error);
@@ -160,16 +163,15 @@ router.put('/', async (req, res, next) => {
 // Cart - Delete Cart item
 router.delete('/', async (req, res, next) => {
   try {
+    console.log('made it into route', req.body);
     const productId = +req.body.productId;
     const currentUser = req.user.id;
-
     // Get cart
     const userCart = await Order.findOne({
       where: {
         userId: currentUser,
         isPurchased: false
-      },
-      include: [{model: OrderProduct}]
+      }
     });
 
     // Delete item from cart
@@ -180,8 +182,9 @@ router.delete('/', async (req, res, next) => {
       }
     });
 
-    // Cart gets automatically updated -- return it
-    res.json(userCart.orderProducts);
+    const cartProducts = await buildCartProducts(userCart.id);
+
+    res.json({userCart, orderProducts: cartProducts});
   } catch (error) {
     next(error);
   }

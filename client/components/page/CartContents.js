@@ -11,7 +11,7 @@ import {
 class CartContents extends React.Component {
   constructor(props) {
     super(props);
-    this.state = [{}];
+    this.state = {};
     this.handleRemove = this.handleRemove.bind(this);
     this.handleQuantityChange = this.handleQuantityChange.bind(this);
     this.handleQuantitySubmit = this.handleQuantitySubmit.bind(this);
@@ -21,47 +21,42 @@ class CartContents extends React.Component {
 
   componentDidMount() {
     this.props.getAllOrderProducts();
+    this.setState({orderProducts: this.props.orderProducts});
   }
 
-  handleRemove(productId) {
+  handleRemove(event, productId) {
     this.props.removeOrderProduct(productId);
   }
 
-  // this handler is incomplete
-  // should we just skip it and not save qty on React state?
   handleQuantityChange(event, productId) {
-    // If I have a state that has an array of Product objects,
-    // how do I set state for a particular one of those objects?
-    // Ideas:
-    // Loop through state, capture the index of the product
-    // with id===productID, and then filter state to array spread, and add updated Qty to that one? Seems incomplete.
-    // this.setState({
-    //   [event.target.name]: event.target.value;
-    // })
+    
     const newQty = event.target.value;
 
     this.setState(prevState => {
       // I need to deep-copy the orderProducts array so I don't mutate the previous state.
-      console.log(prevState);
-      prevState.orderProducts.forEach(item => {
-        if (item.productId === productId) {
-          item[event.target.name] = newQty;
+
+      return prevState.orderProducts.map(orderProduct => {
+        if (orderProduct.id === productId) {
+          orderProduct[event.target.name] = newQty;
         }
+        return orderProduct;
       });
-      return [...prevState];
     });
   }
 
   handleQuantitySubmit(event, productId) {
+    console.log('my state', this.state);
+    console.log('handle qty submit', productId, event.target);
     this.props.updateOrderProduct(productId, event.target.value);
   }
   handleIncrement(event, productId) {
-    const inputValue = event.target.parentNode.firstChild.value;
-    this.props.updateOrderProduct(productId, inputValue + 1);
+    const currQty = this.props.orderProducts[productId];
+    // this.props.updateOrderProduct(productId, currQty);
   }
-  handleDecrement(event, productId) {
+  async handleDecrement(event, productId) {
     const inputValue = event.target.parentNode.firstChild.value;
-    this.props.updateOrderProduct(productId, inputValue - 1);
+    await this.props.updateOrderProduct(productId, inputValue - 1);
+    event.target.parentNode.firstChild.value--;
   }
 
   render() {
@@ -72,7 +67,6 @@ class CartContents extends React.Component {
         </div>
       );
     } else {
-      console.log(this.props);
       const orderProducts = this.props.orderProducts;
       return orderProducts.map(item => (
         <div key={item.id} className="cart-row">
@@ -90,7 +84,7 @@ class CartContents extends React.Component {
                 <button
                   type="submit"
                   className="btn btn--remove"
-                  onClick={() => this.handleRemove(item.id)}
+                  onClick={e => this.handleRemove(e, item.id)}
                 >
                   <i className="fas fa-times" /> Remove
                 </button>

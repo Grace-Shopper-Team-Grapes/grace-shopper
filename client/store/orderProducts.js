@@ -59,7 +59,7 @@ export const addOrderProduct = (productId, productQty) => async dispatch => {
       productId,
       productQty
     });
-    dispatch(addedOrderProduct(data));
+    dispatch(addedOrderProduct(data.orderProducts));
   } catch (err) {
     console.error(err);
   }
@@ -70,7 +70,7 @@ export const updateOrderProduct = (productId, productQty) => async dispatch => {
       productId,
       productQty
     });
-    dispatch(updatedOrderProduct(data));
+    dispatch(updatedOrderProduct(data.orderProducts));
   } catch (err) {
     console.error(err);
   }
@@ -78,9 +78,11 @@ export const updateOrderProduct = (productId, productQty) => async dispatch => {
 export const removeOrderProduct = productId => async dispatch => {
   try {
     const {data} = await axios.delete('/api/orders', {
-      productId
+      data: {
+        productId
+      }
     });
-    dispatch(removedOrderProduct(data));
+    dispatch(removedOrderProduct(data.orderProducts));
   } catch (err) {
     console.error(err);
   }
