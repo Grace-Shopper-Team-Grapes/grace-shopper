@@ -175,16 +175,12 @@ router.get('/', async (req, res, next) => {
 });
 
 //CHECKOUT
-/* From ZK: Why do we need :userId here? This should be on the session */
-router.get('/checkout/:userId', async (req, res, next) => {
+router.get('/checkout', async (req, res, next) => {
   try {
-    //req.user.id equivalent should be found on the frontend and then
-    //put in on the frontend route.
-
     //CHECK IF IN STOCK
     const order = await Order.findOne({
       where: {
-        userId: req.params.userId,
+        userId: req.user.id,
         isPurchased: false
       }
     });
