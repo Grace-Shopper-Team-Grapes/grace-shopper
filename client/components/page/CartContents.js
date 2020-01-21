@@ -28,17 +28,8 @@ class CartContents extends React.Component {
     this.props.removeOrderProduct(productId);
   }
 
-  // this handler is incomplete
-  // should we just skip it and not save qty on React state?
   handleQuantityChange(event, productId) {
-    // If I have a state that has an array of Product objects,
-    // how do I set state for a particular one of those objects?
-    // Ideas:
-    // Loop through state, capture the index of the product
-    // with id===productID, and then filter state to array spread, and add updated Qty to that one? Seems incomplete.
-    // this.setState({
-    //   [event.target.name]: event.target.value;
-    // })
+    
     const newQty = event.target.value;
 
     this.setState(prevState => {
