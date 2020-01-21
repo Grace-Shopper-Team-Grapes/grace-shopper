@@ -2,7 +2,50 @@ const router = require('express').Router();
 const {User, Order, OrderProduct, Product} = require('../db/models');
 module.exports = router;
 
-// Get all users - ADMIN ONLY
+//ACCOUNT PAGE FOR USER
+//(a bit more secure)
+router.get('/account', async (req, res, next) => {
+  try {
+    if (req.user.id) {
+      const specificUser = await User.findByPk(req.user.id, {
+        attributes: {
+          exclude: ['password', 'salt']
+        }
+      });
+      res.json(specificUser);
+    } else {
+      //REDIRECT TO SIGN UP PAGE
+      res.redirect('/signup');
+    }
+  } catch (e) {
+    next(e);
+  }
+});
+//UPDATE ACCOUNT
+router.put('/account', async (req, res, next) => {
+  try {
+    if (req.user.id) {
+      let updated = await User.update(
+        {...req.body},
+        {
+          where: {
+            id: req.user.id
+          }
+        }
+      );
+      if (updated === 0) res.sendStatus(500);
+      else {
+        res.sendStatus(200);
+      }
+    } else {
+      res.redirect('/signup');
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+// ADMIN ONLY BELOW
 router.get('/', async (req, res, next) => {
   try {
     const users = await User.findAll({
