@@ -4,11 +4,12 @@ import UpdateAccountForm from './UpdateAccountForm';
 const defaultState = {
   firstName: '',
   lastName: '',
-  email: ''
-  //   street1: '',
-  //   city: '',
-  //   state: '',
-  //   zip: ''
+  email: '',
+  phone: '',
+  street1: '',
+  city: '',
+  state: '',
+  zip: ''
 };
 
 export default class UpdateAccount extends Component {
