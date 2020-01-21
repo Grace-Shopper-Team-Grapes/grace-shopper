@@ -42,7 +42,7 @@ class SingleProduct extends React.Component {
 
           <div>
             <AddToCart
-              pid={product.id}
+              productId={product.id}
               inventory={product.inventory}
               name={product.name}
             />

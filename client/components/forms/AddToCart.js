@@ -3,7 +3,6 @@ import axios from 'axios';
 import AddToCartForm from './AddToCartForm';
 
 const defaultState = {
-  name: '',
   quantity: ''
 };
 
