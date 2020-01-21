@@ -6,12 +6,14 @@ import user from './user';
 import products from './products';
 import singleProduct from './singleProduct';
 import orderProducts from './orderProducts';
+import account from './account';
 
 const reducer = combineReducers({
   user,
   products,
   product: singleProduct,
-  orderProducts
+  orderProducts,
+  account
 });
 const middleware = composeWithDevTools(
   applyMiddleware(thunkMiddleware, createLogger({collapsed: true}))
@@ -23,3 +25,4 @@ export * from './user';
 export * from './products';
 export * from './singleProduct';
 export * from './orderProducts';
+export * from './account';
