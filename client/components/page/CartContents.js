@@ -21,6 +21,7 @@ class CartContents extends React.Component {
 
   componentDidMount() {
     this.props.getAllOrderProducts();
+    this.setState({orderProducts: this.props.orderProducts});
   }
 
   handleRemove(event, productId) {
@@ -42,16 +43,18 @@ class CartContents extends React.Component {
 
     this.setState(prevState => {
       // I need to deep-copy the orderProducts array so I don't mutate the previous state.
-      prevState.orderProducts.forEach(orderProduct => {
-        if (item.id === productId) {
+
+      return prevState.orderProducts.map(orderProduct => {
+        if (orderProduct.id === productId) {
           orderProduct[event.target.name] = newQty;
         }
+        return orderProduct;
       });
-      return [...prevState];
     });
   }
 
   handleQuantitySubmit(event, productId) {
+    console.log('my state', this.state);
     console.log('handle qty submit', productId, event.target);
     this.props.updateOrderProduct(productId, event.target.value);
   }
@@ -103,7 +106,7 @@ class CartContents extends React.Component {
               className="product-quantity__input"
               name="quantity"
               defaultValue={item.quantity}
-              // onChange={e => this.handleQuantityChange(e, item.id)}
+              onChange={e => this.handleQuantityChange(e, item.id)}
               onBlur={e => this.handleQuantitySubmit(e, item.id)}
             />
             <button
