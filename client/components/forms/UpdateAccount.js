@@ -1,15 +1,19 @@
 import React, {Component} from 'react';
-import axios from 'axios';
-import AddToCartForm from './AddToCartForm';
+import UpdateAccountForm from './UpdateAccountForm';
 
 const defaultState = {
-  name: '',
-  quantity: ''
+  firstName: '',
+  lastName: '',
+  email: ''
+  //   street1: '',
+  //   city: '',
+  //   state: '',
+  //   zip: ''
 };
 
-export default class AddToCart extends Component {
-  constructor(props) {
-    super(props);
+export default class UpdateAccount extends Component {
+  constructor() {
+    super();
     this.state = defaultState;
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -21,28 +25,21 @@ export default class AddToCart extends Component {
     });
   }
 
-  async handleSubmit(event) {
+  handleSubmit(event) {
     event.preventDefault();
     try {
-      if (Number(this.state.quantity) > Number(this.props.inventory)) {
-        window.alert(`not enough inventory`);
-      } else {
-        await axios.post('/api/orderProducts', {
-          productId: this.props.productId,
-          productQty: this.state.quantity
-        });
-      }
+      this.props.updateAccount({...this.state});
       this.setState(defaultState);
     } catch (err) {
       this.setState({
-        errorMessage: `problem adding to cart: ${err.message}`
+        errorMessage: `problem updating Account: ${err.message}`
       });
     }
   }
 
   render() {
     return (
-      <AddToCartForm
+      <UpdateAccountForm
         {...this.state}
         handleChange={this.handleChange}
         handleSubmit={this.handleSubmit}

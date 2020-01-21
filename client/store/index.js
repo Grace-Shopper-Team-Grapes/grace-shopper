@@ -9,6 +9,7 @@ import orderProducts from './orderProducts';
 import categories from './categories';
 import redWines from './redWines';
 import whiteWines from './whiteWines';
+import account from './account';
 
 const reducer = combineReducers({
   user,
@@ -17,7 +18,8 @@ const reducer = combineReducers({
   orderProducts,
   categories,
   redWines,
-  whiteWines
+  whiteWines,
+  account
 });
 const middleware = composeWithDevTools(
   applyMiddleware(thunkMiddleware, createLogger({collapsed: true}))
@@ -32,3 +34,4 @@ export * from './orderProducts';
 export * from './categories';
 export * from './redWines';
 export * from './whiteWines';
+export * from './account';

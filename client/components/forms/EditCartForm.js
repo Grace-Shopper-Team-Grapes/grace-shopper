@@ -1,7 +1,7 @@
 import React from 'react';
-const AddToCartForm = props => {
+const EditCartForm = props => {
   return (
-    <form id="addToCartForm" onSubmit={props.handleSubmit}>
+    <form id="editCartForm" onSubmit={props.handleSubmit}>
       <label htmlFor="quantity">Quantity: </label>
       <input
         type="text"
@@ -16,4 +16,4 @@ const AddToCartForm = props => {
   );
 };
 
-export default AddToCartForm;
+export default EditCartForm;

@@ -16,6 +16,7 @@ import {
 } from './components';
 import {me} from './store';
 import Homepage from './components/page/Homepage';
+import DisplayAccountPage from './components/DisplayAccountPage';
 
 /**
  * COMPONENT
@@ -39,8 +40,9 @@ class Routes extends Component {
         <Route path="/categories/red" component={DisplayRedWines} />
         <Route path="/categories" component={DisplayCategories} />
         <Route path="/orderProducts" component={DisplayAllOrderProducts} />
-        <Route path="/" exact component={Homepage} />
+        <Route path="/account" component={DisplayAccountPage} />
 
+        <Route path="/" exact component={Homepage} />
         {isLoggedIn && (
           <Switch>
             {/* Routes placed here are only available after logging in */}
