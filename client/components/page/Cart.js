@@ -8,8 +8,7 @@ export default class Cart extends React.Component {
     super();
     this.state = {
       grandTotal: 0,
-      cartSize: 0,
-      products: []
+      cartSize: 0
     };
     this.updateCartState = this.updateCartState.bind(this);
     this.handleCheckout = this.handleCheckout.bind(this);
@@ -37,7 +36,6 @@ export default class Cart extends React.Component {
 
   render() {
     return (
-      // <Modal></Modal>
       <div id="cart-modal-mask">
         <div id="cart-modal-container">
           <div id="cart-modal-main">
