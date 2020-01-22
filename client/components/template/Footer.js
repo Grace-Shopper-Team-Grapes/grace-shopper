@@ -33,9 +33,8 @@ const Footer = () => (
           An E-Commerce Platform
         </p>
         <p className="footer__by-line">
-          by <a href="#">Kenneth Chen</a>, <a href="#">Marvin Huang</a>,&nbsp;
-          <a href="#">Ziv Karmi</a>, and&nbsp;
-          <a href="#">Adam Vare</a>
+          by <a href="#">Kenneth Chen</a>, <a href="#">Marvin Huang</a>,{' '}
+          <a href="#">Ziv Karmi</a>, and <a href="#">Adam Vare</a>
         </p>
       </div>
       <div className="footer-links-column grid-item--one-fourth">

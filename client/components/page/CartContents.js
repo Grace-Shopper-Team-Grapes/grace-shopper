@@ -96,7 +96,7 @@ class CartContents extends React.Component {
       return orderProducts.map(item => (
         <div key={item.id} className="cart-row">
           <div className="cart-row__info grid-item--one-half">
-            <img className="cart-row__product-thumb" />
+            <img className="cart-row__product-thumb" src={item.imageUrl} />
             <div className="cart-row__product-text">
               <Link
                 to={`/products/${item.slug}`}

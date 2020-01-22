@@ -6,7 +6,8 @@ const buildCartProducts = async orderId => {
   const cartItems = await OrderProduct.findAll({
     where: {
       orderId
-    }
+    },
+    order: [['createdAt', 'DESC']]
   });
 
   // let cartProduct = {};
