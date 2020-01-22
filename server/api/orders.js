@@ -195,11 +195,6 @@ router.post('/', async (req, res, next) => {
 router.put('/', async (req, res, next) => {
   try {
     //IF NOT LOGGED IN:
-    console.log(`req session`, req.session);
-    console.log(
-      `req.sesssion.cart.orderProducts`,
-      req.session.cart.orderProducts
-    );
     if (!req.user) {
       const cart = req.session.cart;
       const productId = +req.body.productId;
@@ -209,7 +204,8 @@ router.put('/', async (req, res, next) => {
       if (product.inventory >= productQty) {
         cart.orderProducts.forEach(orderProduct => {
           if (+orderProduct.productId === +productId) {
-            orderProduct.quantity = +productQty;
+            console.log(`in the condition should update`);
+            orderProduct.quantity = productQty;
           }
         });
         res.json(cart);
