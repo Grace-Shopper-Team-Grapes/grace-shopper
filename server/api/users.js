@@ -47,6 +47,7 @@ router.put('/', async (req, res, next) => {
 });
 
 // ADMIN ONLY BELOW
+//
 router.get('/admin', isAdmin, async (req, res, next) => {
   try {
     const users = await User.findAll({
