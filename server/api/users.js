@@ -8,18 +8,20 @@ router.get('/', isLoggedIn, async (req, res, next) => {
   try {
     if (req.user.isAdmin) {
       const users = await User.findAll({
-        attributes: ['id', 'email']
+        attributes: {
+          exclude: ['password', 'salt', 'createdAt', 'updatedAt']
+        }
       });
       res.json(users);
     } else {
-      res.sendStatus(401);
+      const specificUser = await User.findByPk(req.user.id, {
+        attributes: {
+          exclude: ['password', 'salt']
+        }
+      });
+      res.json(specificUser);
     }
-    const specificUser = await User.findByPk(req.user.id, {
-      attributes: {
-        exclude: ['password', 'salt']
-      }
-    });
-    res.json(specificUser);
+    res.sendStatus(401);
   } catch (err) {
     next(err);
   }
@@ -54,11 +56,11 @@ router.get('/:id/orders', isAdmin, async (req, res, next) => {
 });
 
 // Admin can GET a specific order for a user
-router.get('/:id/orders/:pid', isAdmin, async (req, res, next) => {
+router.get('/:id/orders/:oid', isAdmin, async (req, res, next) => {
   try {
     const order = await Order.findOne({
       where: {
-        userId: req.params.id
+        userId: req.params.oid
       },
       include: {
         model: OrderProduct
