@@ -41,16 +41,16 @@ const buildCartProducts = async orderId => {
 // Cart - View all items in Cart
 router.get('/', async (req, res, next) => {
   try {
-    const userCart = await Order.findOne({
-      where: {
-        userId: req.user.id,
-        isPurchased: false
-      }
-    });
-
-    const cartProducts = await buildCartProducts(userCart.id);
-
-    res.json({userCart, orderProducts: cartProducts});
+    if (req.user) {
+      const userCart = await Order.findOne({
+        where: {
+          userId: req.user.id,
+          isPurchased: false
+        }
+      });
+      const cartProducts = await buildCartProducts(userCart.id);
+      res.json({userCart, orderProducts: cartProducts});
+    }
   } catch (error) {
     next(error);
   }
@@ -59,65 +59,161 @@ router.get('/', async (req, res, next) => {
 // Cart - Add to cart
 router.post('/', async (req, res, next) => {
   try {
-    const productId = req.body.productId;
-    const productQty = req.body.productQty;
+    //IF NOT LOGGED IN:
+    if (!req.user) {
+      // {
+      // userCart: order {
+      //   dataValues: {
+      //     id: 1,
+      //     grandTotal: 20991,
+      //     isPurchased: false,
+      //     isShipped: false,
+      //     createdAt: 2020-01-22T17:20:05.435Z,
+      //     updatedAt: 2020-01-22T18:45:29.370Z,
+      //     userId: 1,
+      //     orderProducts: [Array]
+      //   },
 
-    const product = await Product.findByPk(productId);
+      // orderProducts: [
+      //   {
+      //     id: 1,
+      //     name: 'Cabernet Sauvignon',
+      //     slug: 'cabernet-sauvignon',
+      //     imageUrl: 'https://media.winefolly.com/Cabernet-Sauvignon-wine-tasting-WineFolly.jpg',
+      //     price: 2999,
+      //     quantity: 6
+      //   },
+      //   {
+      //     id: 2,
+      //     name: 'Syrah',
+      //     slug: 'syrah',
+      //     imageUrl: 'https://media.winefolly.com/Syrah-wine-tasting-WineFolly.jpg',
+      //     price: 999,
+      //     quantity: 3
+      //   }
+      // ]
+      // }
+      const cart = req.session.cart; // an empty obj
+      console.log(`the new age cart`, cart);
+      const productId = req.body.productId;
+      const productQty = req.body.productQty;
+      const product = await Product.findByPk(productId);
 
-    const currentUser = req.user.id;
+      // Check inventory levels before adding to cart
+      if (product.inventory >= productQty) {
+        // Get cart
+        //the cart either already lives on sessions
+        //or it doesn't exist
+        if (!cart.orderProducts) {
+          // it does not exist, so create it.
+          cart.orderProducts = [
+            {
+              id: product.id,
+              name: product.name,
+              slug: product.slug,
+              imageUrl: product.imageUrl,
+              price: product.price,
+              quantity: productQty
+            }
+          ]; // an array of objs
+        } else {
+          //it does exist and we need to update it
+          //loop through and see if you can find the same
+          //productID
 
-    // Check inventory levels before adding to cart
-    if (product.inventory >= productQty) {
-      // Get cart
-      const userCart = await Order.findOne({
-        where: {
-          userId: currentUser,
-          isPurchased: false
-        },
-        include: [{model: OrderProduct}]
-      });
-
-      //FIND OR CREATE ORDER PRODUCT
-      await OrderProduct.findOrCreate({
-        where: {orderId: userCart.id, productId},
-        defaults: {
-          orderId: userCart.id,
-          productId,
-          price: Number(product.price),
-          quantity: Number(productQty)
+          for (let i = 0; i < cart.orderProducts.length; i++) {
+            if (cart.orderProducts[i].id === productId) {
+              cart.orderProducts[i].quantity = productQty;
+              break;
+            }
+            //we went through the whole thing and it didn't exist
+            //so add it
+            cart.orderProducts.push({
+              id: product.id,
+              name: product.name,
+              slug: product.slug,
+              imageUrl: product.imageUrl,
+              price: product.price,
+              quantity: productQty
+            });
+          }
         }
-      }).spread(function(orderProduct, created) {
-        if (!created) {
-          orderProduct.update({
-            quantity: Number(productQty) + orderProduct.quantity
-          });
-        }
-      });
-
-      //GET ALL ORDERPRODUCTS
-      const allOrderProducts = await OrderProduct.findAll({
-        where: {
-          orderId: userCart.id
-        }
-      });
-
-      //ACCUMULATE GRAND TOTAL
-      let grandTotal = 0;
-      allOrderProducts.forEach(orderProduct => {
-        grandTotal += orderProduct.price * orderProduct.quantity;
-      });
-
-      //UPDATE ORDER GRANDTOTAL
-      await userCart.update({
-        grandTotal: grandTotal
-      });
-
-      const cartProducts = await buildCartProducts(userCart.id);
-
-      res.json({userCart, orderProducts: cartProducts});
+        //ACCUMULATE GRAND TOTAL
+        let grandTotal = 0;
+        cart.orderProducts.forEach(orderProduct => {
+          grandTotal += orderProduct.price * orderProduct.quantity;
+        });
+        //UPDATE ORDER GRANDTOTAL
+        cart.grandTotal = grandTotal;
+        console.log(`here is the sessionobj`, req.session);
+        console.log(`and the array:`, req.session.cart.orderProducts);
+        res.json(req.session);
+      } else {
+        //OTHERWISE WE'RE OUT OF THE PRODUCT
+        throw new Error('Not enough product available.');
+      }
     } else {
-      //OTHERWISE WE'RE OUT OF THE PRODUCT
-      throw new Error('Not enough product available.');
+      //IF LOGGED IN:
+      const productId = req.body.productId;
+      const productQty = req.body.productQty;
+
+      const product = await Product.findByPk(productId);
+
+      const currentUser = req.user.id;
+
+      // Check inventory levels before adding to cart
+      if (product.inventory >= productQty) {
+        // Get cart
+        const userCart = await Order.findOne({
+          where: {
+            userId: currentUser,
+            isPurchased: false
+          },
+          include: [{model: OrderProduct}]
+        });
+
+        //FIND OR CREATE ORDER PRODUCT
+        await OrderProduct.findOrCreate({
+          where: {orderId: userCart.id, productId},
+          defaults: {
+            orderId: userCart.id,
+            productId,
+            price: Number(product.price),
+            quantity: Number(productQty)
+          }
+        }).spread(function(orderProduct, created) {
+          if (!created) {
+            orderProduct.update({
+              quantity: Number(productQty) + orderProduct.quantity
+            });
+          }
+        });
+
+        //GET ALL ORDERPRODUCTS
+        const allOrderProducts = await OrderProduct.findAll({
+          where: {
+            orderId: userCart.id
+          }
+        });
+
+        //ACCUMULATE GRAND TOTAL
+        let grandTotal = 0;
+        allOrderProducts.forEach(orderProduct => {
+          grandTotal += orderProduct.price * orderProduct.quantity;
+        });
+
+        //UPDATE ORDER GRANDTOTAL
+        await userCart.update({
+          grandTotal: grandTotal
+        });
+
+        const cartProducts = await buildCartProducts(userCart.id);
+        console.log({userCart, orderProducts: cartProducts});
+        res.json({userCart, orderProducts: cartProducts});
+      } else {
+        //OTHERWISE WE'RE OUT OF THE PRODUCT
+        throw new Error('Not enough product available.');
+      }
     }
   } catch (error) {
     next(error);
@@ -127,33 +223,50 @@ router.post('/', async (req, res, next) => {
 // Cart - Edit Cart item
 router.put('/', async (req, res, next) => {
   try {
-    const productId = req.body.productId;
-    const productQty = req.body.productQty;
-    const product = await Product.findByPk(productId);
-    const currentUser = req.user.id;
+    //IF NOT LOGGED IN:
+    if (!req.user) {
+      console.log(`req. sessions before`, req.sessions);
+      const cart = req.session.cart;
+      const productId = req.body.productId;
+      const productQty = req.body.productQty;
+      if (cart[productId]) {
+        cart[productId] = +productQty;
+      } else {
+        cart[productId] = +productQty;
+      }
+      console.log(`req. sessions after`, req.sessions);
 
-    // Check inventory level for requested amount
-    if (product.inventory >= productQty) {
-      // Get Cart
-      const userCart = await Order.findOne({
-        where: {
-          userId: currentUser,
-          isPurchased: false
-        },
-        include: [{model: OrderProduct}]
-      });
+      res.sendStatus(200);
+    } else {
+      //IF LOGGED IN:
+      const productId = req.body.productId;
+      const productQty = req.body.productQty;
+      const product = await Product.findByPk(productId);
+      const currentUser = req.user.id;
 
-      userCart.orderProducts.map(item => {
-        if (+item.productId === +productId) {
-          item.quantity = +productQty;
-          item.save();
-        }
-        return item;
-      });
+      // Check inventory level for requested amount
+      if (product.inventory >= productQty) {
+        // Get Cart
+        const userCart = await Order.findOne({
+          where: {
+            userId: currentUser,
+            isPurchased: false
+          },
+          include: [{model: OrderProduct}]
+        });
 
-      const cartProducts = await buildCartProducts(userCart.id);
+        userCart.orderProducts.map(item => {
+          if (+item.productId === +productId) {
+            item.quantity = +productQty;
+            item.save();
+          }
+          return item;
+        });
 
-      res.json({userCart, orderProducts: cartProducts});
+        const cartProducts = await buildCartProducts(userCart.id);
+
+        res.json({userCart, orderProducts: cartProducts});
+      }
     }
   } catch (error) {
     next(error);
