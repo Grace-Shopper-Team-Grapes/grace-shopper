@@ -1,22 +1,25 @@
 const router = require('express').Router();
 const {User, Order, OrderProduct, Product} = require('../db/models');
-const {isAdmin} = require('./routeProtections');
+const {isLoggedIn, isAdmin} = require('./routeProtections');
 module.exports = router;
 
-//ACCOUNT PAGE FOR USER
-//(a bit more secure)
-router.get('/', async (req, res, next) => {
+// GET specific user or Admin user
+router.get('/', isLoggedIn, async (req, res, next) => {
   try {
-    if (req.user.id) {
+    if (req.user.isAdmin) {
+      const users = await User.findAll({
+        attributes: {
+          exclude: ['password', 'salt', 'createdAt', 'updatedAt']
+        }
+      });
+      res.json(users);
+    } else {
       const specificUser = await User.findByPk(req.user.id, {
         attributes: {
           exclude: ['password', 'salt']
         }
       });
       res.json(specificUser);
-    } else {
-      //unathorized code
-      res.sendStatus(401);
     }
   } catch (e) {
     next(e);
@@ -63,8 +66,8 @@ router.get('/admin', isAdmin, async (req, res, next) => {
   }
 });
 
-// Get individual user
-router.get('/admin/:id', async (req, res, next) => {
+// Admin can GET any user
+router.get('/:id', isAdmin, async (req, res, next) => {
   try {
     const specificUser = await User.findByPk(req.params.id, {
       attributes: {
@@ -77,8 +80,8 @@ router.get('/admin/:id', async (req, res, next) => {
   }
 });
 
-// Get all orders by a user
-router.get('/admin/:id/orders', async (req, res, next) => {
+// Admin can GET any users' orders
+router.get('/:id/orders', isAdmin, async (req, res, next) => {
   try {
     const orders = await Order.findAll({
       where: {
@@ -91,47 +94,61 @@ router.get('/admin/:id/orders', async (req, res, next) => {
   }
 });
 
-// Get all cart items
-
-// NOTE (from ZK): THIS should be removed -- retrieving user cart should be done via GET @ /orders
-router.get('/admin/:id/orderProducts', async (req, res, next) => {
+// Admin can GET a specific order for a user
+router.get('/:id/orders/:oid', isAdmin, async (req, res, next) => {
   try {
-    const notPurchasedOrder = await Order.findOne({
+    const order = await Order.findOne({
       where: {
-        userId: req.params.id,
-        isPurchased: false
+        id: req.params.oid
       },
-      include: [
-        {
-          model: OrderProduct
-        }
-      ]
+      include: {
+        model: OrderProduct
+      }
     });
-    res.json(notPurchasedOrder);
-  } catch (e) {
-    next(e);
+    res.json(order);
+  } catch (err) {
+    next(err);
   }
 });
 
-// edit user
-router.put('/admin/:id', async (req, res, next) => {
+// User can edit account page
+router.put('/', isLoggedIn, async (req, res, next) => {
   try {
-    const updatedStatus = await User.update(
+    const updatedUser = await User.update(
+      {...req.body},
       {
-        phone: req.body.phone
-      },
-      {where: {id: req.params.id}}
+        where: {
+          id: req.user.id
+        }
+      }
     );
-    //if we choose to send back updated User with new
-    //phone number
-    // const specificUser = await User.findByPk(req.params.id);
-    // if (updatedStatus === 0) res.sendStatus(500);
-    // else {
-    //   res.json(specificUser).status(202);
-    // }
-    if (updatedStatus === 0) res.sendStatus(500);
-    else res.sendStatus(204);
-  } catch (error) {
-    next(error);
+    if (updatedUser) {
+      res.sendStatus(200);
+    } else {
+      res.sendStatus(500);
+    }
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Admin can edit any users' account page
+router.put('/:id', isAdmin, async (req, res, next) => {
+  try {
+    const updatedUser = await User.update(
+      {...req.body},
+      {
+        where: {
+          id: req.user.id
+        }
+      }
+    );
+    if (updatedUser) {
+      res.sendStatus(200);
+    } else {
+      res.sendStatus(500);
+    }
+  } catch (err) {
+    next(err);
   }
 });

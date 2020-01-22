@@ -1,11 +1,11 @@
 const User = require('../db/models/User');
 
-const isAdmin = (req, res, next) => {
-  req.user.id && req.user.isAdmin ? next() : res.sendStatus(403);
+const isLoggedIn = (req, res, next) => {
+  req.user.id ? next() : res.sendStatus(401);
 };
 
-const isLoggedIn = (req, res, next) => {
-  req.params.id === req.user.id ? next() : res.sendStatus(403);
+const isAdmin = (req, res, next) => {
+  req.user.isAdmin ? next() : res.sendStatus(401);
 };
 
 const isSignedUp = async (req, res, next) => {
