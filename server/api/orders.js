@@ -6,7 +6,8 @@ const buildCartProducts = async orderId => {
   const cartItems = await OrderProduct.findAll({
     where: {
       orderId
-    }
+    },
+    order: [['createdAt', 'DESC']]
   });
 
   // let cartProduct = {};
@@ -41,16 +42,19 @@ const buildCartProducts = async orderId => {
 // Cart - View all items in Cart
 router.get('/', async (req, res, next) => {
   try {
-    const userCart = await Order.findOne({
-      where: {
-        userId: req.user.id,
-        isPurchased: false
-      }
-    });
-
-    const cartProducts = await buildCartProducts(userCart.id);
-
-    res.json({userCart, orderProducts: cartProducts});
+    if (req.user) {
+      const userCart = await Order.findOne({
+        where: {
+          userId: req.user.id,
+          isPurchased: false
+        }
+      });
+      const cartProducts = await buildCartProducts(userCart.id);
+      res.json({userCart, orderProducts: cartProducts});
+    } else {
+      //sessions
+      res.json(req.session.cart);
+    }
   } catch (error) {
     next(error);
   }
@@ -59,65 +63,129 @@ router.get('/', async (req, res, next) => {
 // Cart - Add to cart
 router.post('/', async (req, res, next) => {
   try {
-    const productId = req.body.productId;
-    const productQty = req.body.productQty;
+    //IF NOT LOGGED IN:
+    if (!req.user) {
+      const cart = req.session.cart; // an empty obj
+      console.log(`the new age cart`, cart);
+      const productId = +req.body.productId;
+      const productQty = +req.body.productQty;
+      const product = await Product.findByPk(productId);
 
-    const product = await Product.findByPk(productId);
+      // Check inventory levels before adding to cart
+      if (product.inventory >= productQty) {
+        // Get cart
+        //the cart either already lives on sessions
+        //or it doesn't exist
+        if (!cart.orderProducts.length) {
+          // it does not exist, so create it.
+          cart.orderProducts = [
+            {
+              id: product.id,
+              name: product.name,
+              slug: product.slug,
+              imageUrl: product.imageUrl,
+              price: product.price,
+              quantity: productQty
+            }
+          ]; // an array of objs
+        } else {
+          //it does exist and we need to update it
+          //loop through and see if you can find the same
+          //productID
 
-    const currentUser = req.user.id;
-
-    // Check inventory levels before adding to cart
-    if (product.inventory >= productQty) {
-      // Get cart
-      const userCart = await Order.findOne({
-        where: {
-          userId: currentUser,
-          isPurchased: false
-        },
-        include: [{model: OrderProduct}]
-      });
-
-      //FIND OR CREATE ORDER PRODUCT
-      await OrderProduct.findOrCreate({
-        where: {orderId: userCart.id, productId},
-        defaults: {
-          orderId: userCart.id,
-          productId,
-          price: Number(product.price),
-          quantity: Number(productQty)
+          for (let i = 0; i < cart.orderProducts.length; i++) {
+            if (cart.orderProducts[i].id === productId) {
+              cart.orderProducts[i].quantity += +productQty;
+              break;
+            }
+            //we went through the whole thing and the product didn't exist
+            //so add it
+            cart.orderProducts.push({
+              id: product.id,
+              name: product.name,
+              slug: product.slug,
+              imageUrl: product.imageUrl,
+              price: +product.price,
+              quantity: +productQty
+            });
+          }
         }
-      }).spread(function(orderProduct, created) {
-        if (!created) {
-          orderProduct.update({
-            quantity: Number(productQty) + orderProduct.quantity
-          });
-        }
-      });
-
-      //GET ALL ORDERPRODUCTS
-      const allOrderProducts = await OrderProduct.findAll({
-        where: {
-          orderId: userCart.id
-        }
-      });
-
-      //ACCUMULATE GRAND TOTAL
-      let grandTotal = 0;
-      allOrderProducts.forEach(orderProduct => {
-        grandTotal += orderProduct.price * orderProduct.quantity;
-      });
-
-      //UPDATE ORDER GRANDTOTAL
-      await userCart.update({
-        grandTotal: grandTotal
-      });
-
-      const cartProducts = await buildCartProducts(userCart.id);
-
-      res.json({userCart, orderProducts: cartProducts});
+        //ACCUMULATE GRAND TOTAL
+        let grandTotal = 0;
+        cart.orderProducts.forEach(orderProduct => {
+          grandTotal += +orderProduct.price * +orderProduct.quantity;
+        });
+        //UPDATE ORDER GRANDTOTAL
+        cart.grandTotal = grandTotal;
+        console.log(`here is the sessionobj`, req.session);
+        console.log(`THE OBJ:`, req.session.cart);
+        res.json(req.session.cart);
+      } else {
+        //OTHERWISE WE'RE OUT OF THE PRODUCT
+        throw new Error('Not enough product available.');
+      }
     } else {
-      //OTHERWISE WE'RE OUT OF THE PRODUCT
-      throw new Error('Not enough product available.');
+      //IF LOGGED IN:
+      const productId = req.body.productId;
+      const productQty = req.body.productQty;
+
+      const product = await Product.findByPk(productId);
+
+      const currentUser = req.user.id;
+
+      // Check inventory levels before adding to cart
+      if (product.inventory >= productQty) {
+        // Get cart
+        const userCart = await Order.findOne({
+          where: {
+            userId: currentUser,
+            isPurchased: false
+          },
+          include: [{model: OrderProduct}]
+        });
+
+        //FIND OR CREATE ORDER PRODUCT
+        await OrderProduct.findOrCreate({
+          where: {orderId: userCart.id, productId},
+          defaults: {
+            orderId: userCart.id,
+            productId,
+            price: Number(product.price),
+            quantity: Number(productQty)
+          }
+        }).spread(function(orderProduct, created) {
+          if (!created) {
+            orderProduct.update({
+              quantity: Number(productQty) + orderProduct.quantity
+            });
+          }
+        });
+
+        //GET ALL ORDERPRODUCTS
+        const allOrderProducts = await OrderProduct.findAll({
+          where: {
+            orderId: userCart.id
+          }
+        });
+
+        //ACCUMULATE GRAND TOTAL
+        let grandTotal = 0;
+        allOrderProducts.forEach(orderProduct => {
+          grandTotal += orderProduct.price * orderProduct.quantity;
+        });
+
+        //UPDATE ORDER GRANDTOTAL
+        await userCart.update({
+          grandTotal: grandTotal
+        });
+
+        const cartProducts = await buildCartProducts(userCart.id);
+        console.log({userCart, orderProducts: cartProducts});
+        res.json({userCart, orderProducts: cartProducts});
+      } else {
+        //OTHERWISE WE'RE OUT OF THE PRODUCT
+        throw new Error('Not enough product available.');
+      }
     }
   } catch (error) {
     next(error);
@@ -127,33 +195,56 @@ router.post('/', async (req, res, next) => {
 // Cart - Edit Cart item
 router.put('/', async (req, res, next) => {
   try {
-    const productId = req.body.productId;
-    const productQty = req.body.productQty;
-    const product = await Product.findByPk(productId);
-    const currentUser = req.user.id;
+    //IF NOT LOGGED IN:
+    if (!req.user) {
+      const cart = req.session.cart;
+      const productId = +req.body.productId;
+      const productQty = +req.body.productQty;
+      const product = await Product.findByPk(productId);
 
-    // Check inventory level for requested amount
-    if (product.inventory >= productQty) {
-      // Get Cart
-      const userCart = await Order.findOne({
-        where: {
-          userId: currentUser,
-          isPurchased: false
-        },
-        include: [{model: OrderProduct}]
-      });
+      if (product.inventory >= productQty) {
+        cart.orderProducts.forEach(orderProduct => {
+          if (+orderProduct.productId === +productId) {
+            console.log(`in the condition should update`);
+            orderProduct.quantity = productQty;
+          }
+        });
+        res.json(cart);
+      } else {
+        throw new Error('Not enough product available.');
+      }
+    } else {
+      //IF LOGGED IN:
+      const productId = req.body.productId;
+      const productQty = req.body.productQty;
+      const product = await Product.findByPk(productId);
+      const currentUser = req.user.id;
 
-      userCart.orderProducts.map(item => {
-        if (+item.productId === +productId) {
-          item.quantity = +productQty;
-          item.save();
-        }
-        return item;
-      });
+      // Check inventory level for requested amount
+      if (product.inventory >= productQty) {
+        // Get Cart
+        const userCart = await Order.findOne({
+          where: {
+            userId: currentUser,
+            isPurchased: false
+          },
+          include: [{model: OrderProduct}]
+        });
 
-      const cartProducts = await buildCartProducts(userCart.id);
+        userCart.orderProducts.map(item => {
+          if (+item.productId === +productId) {
+            item.quantity = +productQty;
+            item.save();
+          }
+          return item;
+        });
 
-      res.json({userCart, orderProducts: cartProducts});
+        const cartProducts = await buildCartProducts(userCart.id);
+
+        res.json({userCart, orderProducts: cartProducts});
+      } else {
+        throw new Error('Not enough product available.');
+      }
     }
   } catch (error) {
     next(error);
@@ -163,28 +254,37 @@ router.put('/', async (req, res, next) => {
 // Cart - Delete Cart item
 router.delete('/', async (req, res, next) => {
   try {
-    console.log('made it into route', req.body);
     const productId = +req.body.productId;
-    const currentUser = req.user.id;
-    // Get cart
-    const userCart = await Order.findOne({
-      where: {
-        userId: currentUser,
-        isPurchased: false
-      }
-    });
+    if (!req.user) {
+      const cart = req.session.cart;
+      cart.orderProducts.forEach((orderProduct, index) => {
+        if (orderProduct.productId === +productId) {
+          cart.orderProducts.splice(index);
+        }
+      });
+      res.json(cart);
+    } else {
+      // Get cart
+      const currentUser = req.user.id;
+      const userCart = await Order.findOne({
+        where: {
+          userId: currentUser,
+          isPurchased: false
+        }
+      });
 
-    // Delete item from cart
-    OrderProduct.destroy({
-      where: {
-        orderId: +userCart.id,
-        productId
-      }
-    });
+      // Delete item from cart
+      OrderProduct.destroy({
+        where: {
+          orderId: +userCart.id,
+          productId
+        }
+      });
 
-    const cartProducts = await buildCartProducts(userCart.id);
+      const cartProducts = await buildCartProducts(userCart.id);
 
-    res.json({userCart, orderProducts: cartProducts});
+      res.json({userCart, orderProducts: cartProducts});
+    }
   } catch (error) {
     next(error);
   }

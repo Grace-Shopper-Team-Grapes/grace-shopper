@@ -20,52 +20,12 @@ class AccountPage extends React.Component {
       const account = this.props.account;
       return (
         <div>
-          <table>
-            <caption>
-              <strong>My Account</strong>
-            </caption>
-            <tbody>
-              <tr>
-                <td>Name</td>
-                <td>
-                  {account.firstName} {account.lastName}
-                </td>
-              </tr>
-              <tr>
-                <td>Email</td>
-                <td>{account.email}</td>
-              </tr>
-              <tr>
-                <td>Phone</td>
-                <td>{account.phone}</td>
-              </tr>
-              <tr>
-                <td>Address</td>
-                <td>
-                  {account.street1} <br />
-                  {account.city}, {account.state} {account.zip}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <br />
-          <UpdateAccount updateAccount={this.props.updateAccount} />
+          <UpdateAccount
+            updateAccount={this.props.updateAccount}
+            account={account}
+          />
+          {/* <UpdateAccount updateAccount={this.props.updateAccount}/> */}
         </div>
-
-        //   <div>
-        //     <h1>
-        //       Name: {account.firstName} {account.lastName}{' '}
-        //     </h1>
-        //     <h2>Email: {account.email}</h2>
-        //     <h3>Phone: {account.phone}</h3>
-        //     <h3>Street: {account.street1}</h3>
-        //     <h3>City: {account.city}</h3>
-        //     <h3>State: {account.state}</h3>
-        //     <h3>Zip: {account.zip}</h3>
-        //     <h4>etc...</h4>
-        //     <UpdateAccount updateAccount={this.props.updateAccount} />
-        //   </div>
-        // );
       );
     }
   }

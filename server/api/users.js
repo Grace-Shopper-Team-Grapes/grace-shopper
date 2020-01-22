@@ -21,6 +21,46 @@ router.get('/', isLoggedIn, async (req, res, next) => {
       });
       res.json(specificUser);
     }
+  } catch (e) {
+    next(e);
+  }
+});
+//UPDATE ACCOUNT
+router.put('/', async (req, res, next) => {
+  try {
+    console.log(req.body);
+    if (req.user.id) {
+      let updated = await User.update(
+        {...req.body},
+        {
+          where: {
+            id: req.user.id
+          }
+        }
+      );
+      if (updated === 0) res.sendStatus(500);
+      else {
+        res.sendStatus(200);
+      }
+    } else {
+      res.sendStatus(304);
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+// ADMIN ONLY BELOW
+//
+router.get('/admin', isAdmin, async (req, res, next) => {
+  try {
+    const users = await User.findAll({
+      // explicitly select only the id and email fields - even though
+      // users' passwords are encrypted, it won't help if we just
+      // send everything to anyone who asks!
+      attributes: ['id', 'email']
+    });
+    res.json(users);
   } catch (err) {
     next(err);
   }

@@ -23,56 +23,34 @@ class SingleProduct extends React.Component {
     } else {
       const product = this.props.product;
       return (
-        <div>
-          <h5>
-            <Link to="/products">Back to All Products</Link>
-            <br />
-            <Link to="/orderProducts">All Order Products</Link>
-          </h5>
-          <img
-            src={product.imageUrl}
-            align="left"
-            alt="Product Image"
-            width="50%"
-            height="50%"
-          />
-          <h2 margin-left="10px">Price: ${product.price / 100}</h2>
-          <h3>Inventory: {product.inventory}</h3>
-          <h4>{product.description}</h4>
-
-          <div>
-            <AddToCart
-              productId={product.id}
-              inventory={product.inventory}
-              name={product.name}
-            />
+        <div className="container">
+          <div className="page-block pd-container">
+            <div className="pd-image-container">
+              <img
+                src={product.imageUrl}
+                alt={product.name}
+                className="pd-image"
+              />
+            </div>
+            <h1 className="pd-title">{product.name}</h1>
+            <div className="pd-content-container">
+              <div className="pd-add-to-cart__container">
+                <form className="pd-add-to-cart__form">
+                  <input
+                    type="text"
+                    className="pd-add-to-cart__quantity text__input text__input--center"
+                    defaultValue="1"
+                  />
+                  <button type="submit" className="pd-add-to-cart__submit">
+                    <i className="fas fa-cart-plus" /> Add to Cart
+                  </button>
+                </form>
+              </div>
+              <div className="pd-content">
+                <p>{product.description}</p>
+              </div>
+            </div>
           </div>
-
-          {/* <h1>{product.name}</h1>
-          <img src={product.imageUrl} width="200" height="600"/>
-          <h2>Price: {product.price / 100}</h2>
-          <h3>Inventory: {product.inventory}</h3>
-          <h4>{product.description}</h4>
-          <h5>
-            <Link to="/products">Back to All Products</Link>
-          </h5>
-          <h6>
-            <Link to="/orderProducts">All Order Products</Link>
-          </h6>
-          <div>
-            <AddToCart
-              productId={product.id}
-              inventory={product.inventory}
-              name={product.name}
-            />
-          </div>
-          <div>
-            <EditCart
-              productId={product.id}
-              inventory={product.inventory}
-              name={product.name}
-            />
-          </div> */}
         </div>
       );
     }

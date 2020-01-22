@@ -19,18 +19,18 @@ class RedWines extends React.Component {
           {this.props.redWines.map(redWine => {
             if (redWine.id < 13) {
               return (
-                <div key={redWine.id}>
+                <Link key={redWine.id} to={`/products/${redWine.slug}`}>
                   <img
                     src={redWine.imageUrl}
                     align="left"
                     alt="Product Image"
                     width="50%"
                     height="50%"
-                    onClick={() =>
-                      (window.location.href = `../products/${redWine.slug}`)
-                    }
+                    // onClick={() =>
+                    //   (window.location.href = `../products/${redWine.slug}`)
+                    // }
                   />
-                </div>
+                </Link>
               );
             }
           })}
