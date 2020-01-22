@@ -50,6 +50,9 @@ router.get('/', async (req, res, next) => {
       });
       const cartProducts = await buildCartProducts(userCart.id);
       res.json({userCart, orderProducts: cartProducts});
+    } else {
+      //sessions
+      res.json(req.session.cart);
     }
   } catch (error) {
     next(error);
@@ -146,8 +149,8 @@ router.post('/', async (req, res, next) => {
         //UPDATE ORDER GRANDTOTAL
         cart.grandTotal = grandTotal;
         console.log(`here is the sessionobj`, req.session);
-        console.log(`and the array:`, req.session.cart.orderProducts);
-        res.json(req.session);
+        console.log(`THE OBJ:`, req.session.cart);
+        res.json(req.session.cart);
       } else {
         //OTHERWISE WE'RE OUT OF THE PRODUCT
         throw new Error('Not enough product available.');
