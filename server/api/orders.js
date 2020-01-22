@@ -64,42 +64,10 @@ router.post('/', async (req, res, next) => {
   try {
     //IF NOT LOGGED IN:
     if (!req.user) {
-      // {
-      // userCart: order {
-      //   dataValues: {
-      //     id: 1,
-      //     grandTotal: 20991,
-      //     isPurchased: false,
-      //     isShipped: false,
-      //     createdAt: 2020-01-22T17:20:05.435Z,
-      //     updatedAt: 2020-01-22T18:45:29.370Z,
-      //     userId: 1,
-      //     orderProducts: [Array]
-      //   },
-
-      // orderProducts: [
-      //   {
-      //     id: 1,
-      //     name: 'Cabernet Sauvignon',
-      //     slug: 'cabernet-sauvignon',
-      //     imageUrl: 'https://media.winefolly.com/Cabernet-Sauvignon-wine-tasting-WineFolly.jpg',
-      //     price: 2999,
-      //     quantity: 6
-      //   },
-      //   {
-      //     id: 2,
-      //     name: 'Syrah',
-      //     slug: 'syrah',
-      //     imageUrl: 'https://media.winefolly.com/Syrah-wine-tasting-WineFolly.jpg',
-      //     price: 999,
-      //     quantity: 3
-      //   }
-      // ]
-      // }
       const cart = req.session.cart; // an empty obj
       console.log(`the new age cart`, cart);
-      const productId = req.body.productId;
-      const productQty = req.body.productQty;
+      const productId = +req.body.productId;
+      const productQty = +req.body.productQty;
       const product = await Product.findByPk(productId);
 
       // Check inventory levels before adding to cart
@@ -107,7 +75,7 @@ router.post('/', async (req, res, next) => {
         // Get cart
         //the cart either already lives on sessions
         //or it doesn't exist
-        if (!cart.orderProducts) {
+        if (!cart.orderProducts.length) {
           // it does not exist, so create it.
           cart.orderProducts = [
             {
@@ -126,25 +94,25 @@ router.post('/', async (req, res, next) => {
 
           for (let i = 0; i < cart.orderProducts.length; i++) {
             if (cart.orderProducts[i].id === productId) {
-              cart.orderProducts[i].quantity = productQty;
+              cart.orderProducts[i].quantity += +productQty;
               break;
             }
-            //we went through the whole thing and it didn't exist
+            //we went through the whole thing and the product didn't exist
             //so add it
             cart.orderProducts.push({
               id: product.id,
               name: product.name,
               slug: product.slug,
               imageUrl: product.imageUrl,
-              price: product.price,
-              quantity: productQty
+              price: +product.price,
+              quantity: +productQty
             });
           }
         }
         //ACCUMULATE GRAND TOTAL
         let grandTotal = 0;
         cart.orderProducts.forEach(orderProduct => {
-          grandTotal += orderProduct.price * orderProduct.quantity;
+          grandTotal += +orderProduct.price * +orderProduct.quantity;
         });
         //UPDATE ORDER GRANDTOTAL
         cart.grandTotal = grandTotal;
@@ -227,19 +195,27 @@ router.post('/', async (req, res, next) => {
 router.put('/', async (req, res, next) => {
   try {
     //IF NOT LOGGED IN:
+    console.log(`req session`, req.session);
+    console.log(
+      `req.sesssion.cart.orderProducts`,
+      req.session.cart.orderProducts
+    );
     if (!req.user) {
-      console.log(`req. sessions before`, req.sessions);
       const cart = req.session.cart;
-      const productId = req.body.productId;
-      const productQty = req.body.productQty;
-      if (cart[productId]) {
-        cart[productId] = +productQty;
-      } else {
-        cart[productId] = +productQty;
-      }
-      console.log(`req. sessions after`, req.sessions);
+      const productId = +req.body.productId;
+      const productQty = +req.body.productQty;
+      const product = await Product.findByPk(productId);
 
-      res.sendStatus(200);
+      if (product.inventory >= productQty) {
+        cart.orderProducts.forEach(orderProduct => {
+          if (+orderProduct.productId === +productId) {
+            orderProduct.quantity = +productQty;
+          }
+        });
+        res.json(cart);
+      } else {
+        throw new Error('Not enough product available.');
+      }
     } else {
       //IF LOGGED IN:
       const productId = req.body.productId;
@@ -269,6 +245,8 @@ router.put('/', async (req, res, next) => {
         const cartProducts = await buildCartProducts(userCart.id);
 
         res.json({userCart, orderProducts: cartProducts});
+      } else {
+        throw new Error('Not enough product available.');
       }
     }
   } catch (error) {
@@ -279,28 +257,37 @@ router.put('/', async (req, res, next) => {
 // Cart - Delete Cart item
 router.delete('/', async (req, res, next) => {
   try {
-    console.log('made it into route', req.body);
     const productId = +req.body.productId;
-    const currentUser = req.user.id;
-    // Get cart
-    const userCart = await Order.findOne({
-      where: {
-        userId: currentUser,
-        isPurchased: false
-      }
-    });
+    if (!req.user) {
+      const cart = req.session.cart;
+      cart.orderProducts.forEach((orderProduct, index) => {
+        if (orderProduct.productId === +productId) {
+          cart.orderProducts.splice(index);
+        }
+      });
+      res.json(cart);
+    } else {
+      // Get cart
+      const currentUser = req.user.id;
+      const userCart = await Order.findOne({
+        where: {
+          userId: currentUser,
+          isPurchased: false
+        }
+      });
 
-    // Delete item from cart
-    OrderProduct.destroy({
-      where: {
-        orderId: +userCart.id,
-        productId
-      }
-    });
+      // Delete item from cart
+      OrderProduct.destroy({
+        where: {
+          orderId: +userCart.id,
+          productId
+        }
+      });
 
-    const cartProducts = await buildCartProducts(userCart.id);
+      const cartProducts = await buildCartProducts(userCart.id);
 
-    res.json({userCart, orderProducts: cartProducts});
+      res.json({userCart, orderProducts: cartProducts});
+    }
   } catch (error) {
     next(error);
   }
