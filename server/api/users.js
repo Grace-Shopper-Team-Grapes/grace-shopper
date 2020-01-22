@@ -21,7 +21,6 @@ router.get('/', isLoggedIn, async (req, res, next) => {
       });
       res.json(specificUser);
     }
-    res.sendStatus(401);
   } catch (err) {
     next(err);
   }
