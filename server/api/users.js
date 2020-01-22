@@ -59,7 +59,7 @@ router.get('/:id/orders/:oid', isAdmin, async (req, res, next) => {
   try {
     const order = await Order.findOne({
       where: {
-        userId: req.params.oid
+        id: req.params.oid
       },
       include: {
         model: OrderProduct
