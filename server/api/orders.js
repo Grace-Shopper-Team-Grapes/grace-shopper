@@ -208,7 +208,7 @@ router.get('/', async (req, res, next) => {
 });
 
 //CHECKOUT
-router.get('/checkout', async (req, res, next) => {
+router.post('/checkout', async (req, res, next) => {
   try {
     //CHECK IF IN STOCK
     const order = await Order.findOne({

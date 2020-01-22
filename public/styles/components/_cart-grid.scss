@@ -34,6 +34,21 @@
           background-color: #efefef;
           margin-right: $s-size;
         }
+
+        .cart-row__product-link {
+          font-family: Montserrat, Helvetica, Arial, sans-serif;
+          font-size: 1.8rem;
+          color: $dark;
+          line-height: 2.2rem;
+          font-weight: bold;
+        }
+
+        .cart-row__product-price {
+          font-size: 1.4rem;
+          color: lighten($dark, 10%);
+          margin: 0.6rem $s-size;
+          font-weight: bold;
+        }
       }
 
       .cart-row__product-remove {
@@ -47,6 +62,17 @@
 
       .product-quantity__input {
         width: $l-size;
+        height: $l-size;
+        vertical-align: baseline;
+        margin-right: $s-size;
+      }
+
+      .product-quantity__modifier {
+        background: none;
+        color: $dark-purple;
+        font-size: $l-size;
+        border: none;
+        margin: $s-size 1rem;
       }
     }
   }

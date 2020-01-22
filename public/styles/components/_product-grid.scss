@@ -14,13 +14,19 @@
       width: 22%;
       flex-basis: 22%;
       margin: $s-size;
-      height: 340px;
+      margin-bottom: $l-size;
+      height: 27.5rem;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
     }
 
+    .products-grid-item__link {
+      color: $dark;
+    }
+
     .products-grid-item__thumb {
+      width: 23rem;
     }
 
     .products-grid-item__name {

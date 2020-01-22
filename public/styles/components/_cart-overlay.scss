@@ -9,18 +9,61 @@
   align-items: center;
   background-color: rgba($dark, 0.5);
 }
-#cart-modal-main {
+#cart-modal-container {
   position: relative;
   z-index: 2000000010;
-  width: 70vw;
-  height: 70vh;
-  min-height: 30vh;
-  padding: $l-size;
   background-color: lighten($light-purple, 20%);
+
+  #cart-modal-main {
+    display: block;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding: $l-size;
+    width: 70vw;
+    height: 70vh;
+    min-height: 30vh;
+
+    &::-webkit-scrollbar {
+      width: 1rem;
+
+      &-track {
+        background-color: $medium-purple;
+        box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+      }
+
+      &-thumb {
+        background-color: $dark-purple;
+        outline: 1px solid $light-purple;
+      }
+    }
+  }
 }
 
 .cart-modal__title {
   font-family: $title-font;
+  margin-top: 0;
+}
+
+.cart-modal-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: $s-size $m-size;
+
+  .cart-modal__grand-total {
+    font-size: $m-size;
+    font-weight: 700;
+    text-align: right;
+    margin-bottom: $m-size;
+  }
+
+  .cart-checkout {
+    width: 20rem;
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: 0.1rem;
+    font-size: 1.8rem;
+  }
 }
 
 @import './cart-grid';

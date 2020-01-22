@@ -24,12 +24,19 @@ class CartContents extends React.Component {
     this.setState({orderProducts: this.props.orderProducts});
   }
 
+  componentDidUpdate() {
+    let newGrandTotal = 0;
+    this.props.orderProducts.forEach(item => {
+      newGrandTotal += item.price * item.quantity;
+    });
+    this.props.updateCartState(newGrandTotal, this.props.orderProducts.length);
+  }
+
   handleRemove(event, productId) {
     this.props.removeOrderProduct(productId);
   }
 
   handleQuantityChange(event, productId) {
-    
     const newQty = event.target.value;
 
     this.setState(prevState => {
@@ -45,18 +52,36 @@ class CartContents extends React.Component {
   }
 
   handleQuantitySubmit(event, productId) {
-    console.log('my state', this.state);
-    console.log('handle qty submit', productId, event.target);
     this.props.updateOrderProduct(productId, event.target.value);
   }
   handleIncrement(event, productId) {
-    const currQty = this.props.orderProducts[productId];
-    // this.props.updateOrderProduct(productId, currQty);
+    const qtyInputField = document.getElementById(
+      `product-quantity-${productId}`
+    );
+    console.log('quantity field is: ', qtyInputField);
+    const newQty = +qtyInputField.value + 1;
+    console.log(`newQty is ${newQty} with type`, typeof newQty);
+    this.props.updateOrderProduct(productId, newQty);
+    qtyInputField.value = newQty;
   }
-  async handleDecrement(event, productId) {
-    const inputValue = event.target.parentNode.firstChild.value;
-    await this.props.updateOrderProduct(productId, inputValue - 1);
-    event.target.parentNode.firstChild.value--;
+  handleDecrement(event, productId) {
+    const qtyInputField = document.getElementById(
+      `product-quantity-${productId}`
+    );
+    console.log('quantity field is: ', qtyInputField);
+    const newQty = +qtyInputField.value - 1;
+    console.log(`newQty is ${newQty} with type`, typeof newQty);
+
+    // Remove the product if newQty is 0:
+    if (!newQty) {
+      // eslint-disable-next-line no-alert
+      if (confirm('Remove product from cart?')) {
+        this.props.removeOrderProduct(productId);
+      }
+    } else {
+      this.props.updateOrderProduct(productId, newQty);
+      qtyInputField.value = newQty;
+    }
   }
 
   render() {
@@ -79,7 +104,9 @@ class CartContents extends React.Component {
               >
                 {item.name}
               </Link>
-              <div className="cart-row__product-price">${item.price / 100}</div>
+              <div className="cart-row__product-price">
+                ${(item.price / 100).toFixed(2)}
+              </div>
               <div className="cart-row__product-remove">
                 <button
                   type="submit"
@@ -94,29 +121,32 @@ class CartContents extends React.Component {
           <div className="cart-row__product-quantity grid-item--one-fourth">
             <input
               type="text"
-              className="product-quantity__input"
+              className="product-quantity__input text__input text__input--center"
               name="quantity"
               defaultValue={item.quantity}
               onChange={e => this.handleQuantityChange(e, item.id)}
               onBlur={e => this.handleQuantitySubmit(e, item.id)}
+              id={`product-quantity-${item.id}`}
             />
             <button
               type="submit"
-              name="procuct-quantity__increment"
+              className="product-quantity__increment product-quantity__modifier"
+              name="quantityIncrement"
               onClick={e => this.handleIncrement(e, item.id)}
             >
               +
             </button>
             <button
               type="submit"
-              name="procuct-quantity__decrement"
+              className="product-quantity__decrement product-quantity__modifier"
+              name="quantityDecrement"
               onClick={e => this.handleDecrement(e, item.id)}
             >
-              -
+              &ndash;
             </button>
           </div>
           <div className="cart-row__product-subtotal grid-item--one-fourth">
-            ${item.price * item.quantity / 100}
+            ${(item.price * item.quantity / 100).toFixed(2)}
           </div>
         </div>
       ));

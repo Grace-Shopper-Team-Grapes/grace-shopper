@@ -7,7 +7,7 @@ import {
   Login,
   Signup,
   UserHome,
-  DisplayAllProducts,
+  AllProducts,
   DisplayCategories,
   DisplayWhiteWines,
   DisplayRedWines,
@@ -35,7 +35,7 @@ class Routes extends Component {
         <Route path="/products/:slug" component={DisplaySingleProduct} />
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
-        <Route path="/products" component={DisplayAllProducts} />
+        <Route path="/products" component={AllProducts} />
         <Route path="/categories/white" component={DisplayWhiteWines} />
         <Route path="/categories/red" component={DisplayRedWines} />
         <Route path="/categories" component={DisplayCategories} />
