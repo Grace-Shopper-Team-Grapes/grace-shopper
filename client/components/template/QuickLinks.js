@@ -45,6 +45,7 @@ const QuickLinks = ({handleClick, isLoggedIn}) => (
           href="#"
           className="quick-links__item-link"
         >
+          {/* How can I get the Redux Store for orderProducts here so I can get the length of orderProducts[]? */}
           Cart (0)
         </a>
       </li>

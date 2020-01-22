@@ -2,8 +2,14 @@ const router = require('express').Router();
 const {Product} = require('../db/models/');
 
 router.get('/', async (req, res, next) => {
+  // add a condition so that an admin can see all
+  // products, regardless of if isPublished
   try {
-    const allProducts = await Product.findAll();
+    const allProducts = await Product.findAll({
+      where: {
+        isPublished: true
+      }
+    });
     res.json(allProducts);
   } catch (e) {
     next(e);

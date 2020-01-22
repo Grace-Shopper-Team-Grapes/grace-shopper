@@ -66,4 +66,8 @@
       border: none;
     }
   }
+
+  &--checkout {
+    padding: $s-size $m-size;
+  }
 }
