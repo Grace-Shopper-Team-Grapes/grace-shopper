@@ -1,5 +1,6 @@
 import React from 'react';
 import CartContents from './CartContents';
+
 import axios from 'axios';
 
 export default class Cart extends React.Component {
@@ -11,10 +12,17 @@ export default class Cart extends React.Component {
     };
     this.updateCartState = this.updateCartState.bind(this);
     this.handleCheckout = this.handleCheckout.bind(this);
+    this.closeCart = this.closeCart.bind(this);
   }
 
   updateCartState(grandTotal, cartSize) {
     this.setState({grandTotal, cartSize});
+  }
+
+  closeCart() {
+    document
+      .getElementById('cart-modal-mask')
+      .style.setProperty('display', 'none', '');
   }
 
   async handleCheckout() {
@@ -61,10 +69,7 @@ export default class Cart extends React.Component {
             <a
               href="#"
               style={{position: 'absolute', top: '-10px', right: '-10px'}}
-              onClick={() => {
-                document.getElementById('cart-modal-mask').style.display =
-                  'none';
-              }}
+              onClick={this.closeCart}
             >
               <i
                 style={{
