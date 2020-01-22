@@ -260,7 +260,7 @@ router.post('/checkout', async (req, res, next) => {
       });
 
       //Need a new order now with default properties
-      await Order.create({userId: req.params.userId});
+      await Order.create({userId: req.user.id});
 
       //redirect below to a checkout confirmation page
       res.redirect('/products');
