@@ -21,7 +21,7 @@ const gotAccount = account => ({type: GOT_ACCOUNT, account});
 //ROUTE USES REQ.USER FOR SPECIFICITY
 export const getAccount = () => async dispatch => {
   try {
-    const {data} = await axios.get('/api/users/account');
+    const {data} = await axios.get('/api/users/');
     dispatch(gotAccount(data));
   } catch (err) {
     console.error(err);
@@ -30,8 +30,8 @@ export const getAccount = () => async dispatch => {
 export const updateAccount = updateObj => {
   return async dispatch => {
     try {
-      await axios.put('/api/users/account', updateObj);
-      const {data} = await axios.get('/api/users/account');
+      await axios.put('/api/users/', updateObj);
+      const {data} = await axios.get('/api/users/');
       dispatch(gotAccount(data));
     } catch (error) {
       console.error(error);

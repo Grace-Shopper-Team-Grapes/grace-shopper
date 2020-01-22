@@ -5,7 +5,7 @@ module.exports = router;
 
 //ACCOUNT PAGE FOR USER
 //(a bit more secure)
-router.get('/account', async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     if (req.user.id) {
       const specificUser = await User.findByPk(req.user.id, {
@@ -15,15 +15,15 @@ router.get('/account', async (req, res, next) => {
       });
       res.json(specificUser);
     } else {
-      //REDIRECT TO SIGN UP PAGE
-      res.redirect('/signup');
+      //unathorized code
+      res.sendStatus(401);
     }
   } catch (e) {
     next(e);
   }
 });
 //UPDATE ACCOUNT
-router.put('/account', async (req, res, next) => {
+router.put('/', async (req, res, next) => {
   try {
     if (req.user.id) {
       let updated = await User.update(
@@ -39,7 +39,7 @@ router.put('/account', async (req, res, next) => {
         res.sendStatus(200);
       }
     } else {
-      res.redirect('/signup');
+      res.sendStatus(304);
     }
   } catch (error) {
     next(error);
@@ -47,7 +47,8 @@ router.put('/account', async (req, res, next) => {
 });
 
 // ADMIN ONLY BELOW
-router.get('/', isAdmin, async (req, res, next) => {
+//
+router.get('/admin', isAdmin, async (req, res, next) => {
   try {
     const users = await User.findAll({
       // explicitly select only the id and email fields - even though
@@ -62,7 +63,7 @@ router.get('/', isAdmin, async (req, res, next) => {
 });
 
 // Get individual user
-router.get('/:id', async (req, res, next) => {
+router.get('/admin/:id', async (req, res, next) => {
   try {
     const specificUser = await User.findByPk(req.params.id, {
       attributes: {
@@ -76,7 +77,7 @@ router.get('/:id', async (req, res, next) => {
 });
 
 // Get all orders by a user
-router.get('/:id/orders', async (req, res, next) => {
+router.get('/admin/:id/orders', async (req, res, next) => {
   try {
     const orders = await Order.findAll({
       where: {
@@ -92,7 +93,7 @@ router.get('/:id/orders', async (req, res, next) => {
 // Get all cart items
 
 // NOTE (from ZK): THIS should be removed -- retrieving user cart should be done via GET @ /orders
-router.get('/:id/orderProducts', async (req, res, next) => {
+router.get('/admin/:id/orderProducts', async (req, res, next) => {
   try {
     const notPurchasedOrder = await Order.findOne({
       where: {
@@ -112,7 +113,7 @@ router.get('/:id/orderProducts', async (req, res, next) => {
 });
 
 // edit user
-router.put('/:id', async (req, res, next) => {
+router.put('/admin/:id', async (req, res, next) => {
   try {
     const updatedStatus = await User.update(
       {
