@@ -42,6 +42,7 @@ export default class UpdateAccount extends Component {
     return (
       <UpdateAccountForm
         {...this.state}
+        account={this.props.account}
         handleChange={this.handleChange}
         handleSubmit={this.handleSubmit}
       />
