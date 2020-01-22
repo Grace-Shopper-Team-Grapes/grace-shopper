@@ -10,6 +10,9 @@ curl -i -X PUT -H 'Content-Type: application/json' -d '{
 //ADD TO CART
 curl -i -X POST -H 'Content-Type: application/json' -d '{"testId":"1", "productId":"1", "productQty":2}' http://localhost:8080/api/orderProducts/add
 
+//CHECKOUT
+curl -i -X POST -H 'Content-Type: application/json' -d '{"testId":"1"}' http://localhost:8080/api/orders/checkout
+
 
 //FOR REFERENCE
 
