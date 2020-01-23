@@ -5,7 +5,7 @@ const OrderProduct = require('../db/models/OrderProduct');
 const {isSignedUp} = require('../api/routeProtections');
 const Product = require('../db/models/Product');
 module.exports = router;
-
+//below function is taken from orders
 const buildCartProducts = async orderId => {
   const allProducts = await Product.findAll({});
   const cartItems = await OrderProduct.findAll({
@@ -43,17 +43,7 @@ router.post('/login', async (req, res, next) => {
       res.status(401).send('Wrong username and/or password');
     } else {
       //you have a user account
-      //unfortunately we don't have a session yet
       if (req.session.cart.orderProducts.length) {
-        //we have a cart, so need to merge.
-        //need to add to cart stuff from sessions
-        // req.session.cart.orderProducts.forEach(async orderProduct => {
-        //   await axios.post('/api/orders/', {
-        //     productId: orderProduct.id,
-        //     productQty: orderProduct.quantity,
-        //     special: user.id
-        //   });
-        // });
         req.session.cart.orderProducts.forEach(async sessionOrderProduct => {
           const productId = +sessionOrderProduct.id;
           const productQty = +sessionOrderProduct.quantity;
