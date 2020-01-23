@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const {User, Order, Product, OrderProduct} = require('../db/models');
+const {isLoggedIn} = require('../api/routeProtections');
 
 const buildCartProducts = async orderId => {
   const allProducts = await Product.findAll({});
@@ -93,13 +94,21 @@ router.post('/', async (req, res, next) => {
           //loop through and see if you can find the same
           //productID
 
-          for (let i = 0; i < cart.orderProducts.length; i++) {
-            if (cart.orderProducts[i].id === productId) {
-              cart.orderProducts[i].quantity += +productQty;
-              break;
+          let flag = 0;
+
+          cart.orderProducts.forEach(orderProduct => {
+            if (+orderProduct.id === +productId) {
+              flag = 1;
             }
-            //we went through the whole thing and the product didn't exist
-            //so add it
+          });
+          if (flag) {
+            for (let i = 0; i < cart.orderProducts.length; i++) {
+              if (+cart.orderProducts[i].id === +productId) {
+                cart.orderProducts[i].quantity += +productQty;
+                break;
+              }
+            }
+          } else {
             cart.orderProducts.push({
               id: product.id,
               name: product.name,
@@ -110,6 +119,7 @@ router.post('/', async (req, res, next) => {
             });
           }
         }
+
         //ACCUMULATE GRAND TOTAL
         let grandTotal = 0;
         cart.orderProducts.forEach(orderProduct => {
@@ -117,8 +127,6 @@ router.post('/', async (req, res, next) => {
         });
         //UPDATE ORDER GRANDTOTAL
         cart.grandTotal = grandTotal;
-        console.log(`here is the sessionobj`, req.session);
-        console.log(`THE OBJ:`, req.session.cart);
         res.json(req.session.cart);
       } else {
         //OTHERWISE WE'RE OUT OF THE PRODUCT
@@ -153,9 +161,9 @@ router.post('/', async (req, res, next) => {
             price: Number(product.price),
             quantity: Number(productQty)
           }
-        }).spread(function(orderProduct, created) {
+        }).spread(async function(orderProduct, created) {
           if (!created) {
-            orderProduct.update({
+            await orderProduct.update({
               quantity: Number(productQty) + orderProduct.quantity
             });
           }
@@ -204,8 +212,7 @@ router.put('/', async (req, res, next) => {
 
       if (product.inventory >= productQty) {
         cart.orderProducts.forEach(orderProduct => {
-          if (+orderProduct.productId === +productId) {
-            console.log(`in the condition should update`);
+          if (+orderProduct.id === +productId) {
             orderProduct.quantity = productQty;
           }
         });
@@ -257,9 +264,15 @@ router.delete('/', async (req, res, next) => {
     const productId = +req.body.productId;
     if (!req.user) {
       const cart = req.session.cart;
+      let flag = 0;
+      let toSplice;
       cart.orderProducts.forEach((orderProduct, index) => {
-        if (orderProduct.productId === +productId) {
-          cart.orderProducts.splice(index);
+        if (+orderProduct.id === +productId) {
+          flag = 1;
+          toSplice = index;
+        }
+        if (flag) {
+          cart.orderProducts.splice(toSplice);
         }
       });
       res.json(cart);
@@ -310,6 +323,9 @@ router.get('/', async (req, res, next) => {
 //CHECKOUT
 router.post('/checkout', async (req, res, next) => {
   try {
+    if (!req.user) {
+      res.redirect('/login');
+    }
     //CHECK IF IN STOCK
     const order = await Order.findOne({
       where: {
