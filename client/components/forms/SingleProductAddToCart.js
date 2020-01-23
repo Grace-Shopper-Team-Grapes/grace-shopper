@@ -35,6 +35,7 @@ const SingleProductAddToCart = props => {
           defaultValue="1"
           onChange={handleQtyChange}
           id="single-product-quantity"
+          name="quantity"
         />
         <button type="submit" className="pd-add-to-cart__submit">
           <i className="fas fa-cart-plus" /> Add to Cart
