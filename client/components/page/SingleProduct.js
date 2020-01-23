@@ -33,12 +33,13 @@ class SingleProduct extends React.Component {
 
   handleAddToCart(event, productId) {
     event.preventDefault();
-
-    if (isNaN(this.state.quantity))
+    if (isNaN(+event.target.firstChild.value)) {
       this.setState({atcError: 'Quantity must be a number'});
-    else {
+      return false;
+    } else {
       this.props.addOrderProduct(productId, this.state.quantity);
       this.setState({atcError: ''});
+      return true;
     }
   }
 
