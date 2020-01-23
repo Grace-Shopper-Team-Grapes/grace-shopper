@@ -25,7 +25,6 @@ router.get('/', async (req, res, next) => {
 //UPDATE ACCOUNT
 router.put('/', async (req, res, next) => {
   try {
-    console.log(req.body);
     if (req.user.id) {
       let updated = await User.update(
         {...req.body},
