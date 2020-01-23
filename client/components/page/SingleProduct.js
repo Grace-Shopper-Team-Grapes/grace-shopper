@@ -67,7 +67,7 @@ class SingleProduct extends React.Component {
             <h1 className="pd-title">{product.name}</h1>
             <div className="pd-content-container">
               <SingleProductAddToCart
-                productId={product.id}
+                product={product}
                 handleQtyChange={this.handleQtyChange}
                 handleAddToCart={this.handleAddToCart}
                 atcError={this.state.atcError}
