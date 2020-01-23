@@ -62,6 +62,7 @@ router.get('/', async (req, res, next) => {
 });
 
 // Cart - Add to cart
+//WORKING
 router.post('/', async (req, res, next) => {
   try {
     //IF NOT LOGGED IN:
