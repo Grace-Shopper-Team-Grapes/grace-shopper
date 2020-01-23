@@ -62,12 +62,12 @@ router.get('/', async (req, res, next) => {
 });
 
 // Cart - Add to cart
+// eslint-disable-next-line max-statements
 router.post('/', async (req, res, next) => {
   try {
     //IF NOT LOGGED IN:
     if (!req.user) {
       const cart = req.session.cart; // an empty obj
-      console.log(`the new age cart`, cart);
       const productId = +req.body.productId;
       const productQty = +req.body.productQty;
       const product = await Product.findByPk(productId);
@@ -134,8 +134,8 @@ router.post('/', async (req, res, next) => {
       }
     } else {
       //IF LOGGED IN:
-      const productId = req.body.productId;
-      const productQty = req.body.productQty;
+      const productId = +req.body.productId;
+      const productQty = +req.body.productQty;
 
       const product = await Product.findByPk(productId);
 
@@ -188,7 +188,7 @@ router.post('/', async (req, res, next) => {
         });
 
         const cartProducts = await buildCartProducts(userCart.id);
-        console.log({userCart, orderProducts: cartProducts});
+
         res.json({userCart, orderProducts: cartProducts});
       } else {
         //OTHERWISE WE'RE OUT OF THE PRODUCT
@@ -432,43 +432,3 @@ router.get('/ship/:orderId', async (req, res, next) => {
 });
 
 module.exports = router;
-
-/*
-The following code can be used to retrieve a model's association methods:
-const model = Order;
-for (let assoc of Object.keys(model.associations)) {
-  for (let accessor of Object.keys(model.associations[assoc].accessors)) {
-    console.log(
-      model.name +
-        '.' +
-        model.associations[assoc].accessors[accessor] +
-        '()'
-    );
-  }
-}
-
-The following is a list of Order model association methods:
-order.getUser()
-order.setUser()
-order.createUser()
-order.getOrderProducts()
-order.setOrderProducts()
-order.addOrderProducts()
-order.addOrderProduct()
-order.createOrderProduct()
-order.removeOrderProduct()
-order.removeOrderProducts()
-order.hasOrderProduct()
-order.hasOrderProducts()
-order.countOrderProducts()
-order.getProducts()
-order.setProducts()
-order.addProducts()
-order.addProduct()
-order.createProduct()
-order.removeProduct()
-order.removeProducts()
-order.hasProduct()
-order.hasProducts()
-order.countProducts()
-*/

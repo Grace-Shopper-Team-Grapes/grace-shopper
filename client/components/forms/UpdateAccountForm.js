@@ -9,9 +9,8 @@ firstName: '',
   zip: ''
 */
 const UpdateAccountForm = props => {
-  console.log(props);
   let account = props.account;
-  console.log('this is props', props);
+
   return (
     <div className="form-container form-container--center">
       <form

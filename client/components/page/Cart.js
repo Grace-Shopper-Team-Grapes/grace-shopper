@@ -8,7 +8,8 @@ export default class Cart extends React.Component {
     super();
     this.state = {
       grandTotal: 0,
-      cartSize: 0
+      cartSize: 0,
+      cartError: ''
     };
     this.updateCartState = this.updateCartState.bind(this);
     this.handleCheckout = this.handleCheckout.bind(this);
@@ -16,7 +17,7 @@ export default class Cart extends React.Component {
   }
 
   updateCartState(grandTotal, cartSize) {
-    this.setState({grandTotal, cartSize});
+    this.setState({grandTotal, cartSize, cartError: ''});
   }
 
   closeCart() {
@@ -26,15 +27,19 @@ export default class Cart extends React.Component {
   }
 
   async handleCheckout() {
-    try {
-      console.log('in handleCheckout, state ===', this.state);
-      let isGuest = await axios.post('/api/orders/checkout');
-      if (isGuest.data.flag) {
-        history.push('/login');
-        this.closeCart();
+    if (!this.state.cartSize) {
+      this.setState({cartError: 'Add products to your cart to check out'});
+    } else {
+      this.setState({cartError: ''});
+      try {
+        let isGuest = await axios.post('/api/orders/checkout');
+        if (isGuest.data.flag) {
+          history.push('/login');
+          this.closeCart();
+        }
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
     }
   }
 
@@ -51,12 +56,14 @@ export default class Cart extends React.Component {
                 <div className="grid-item--one-fourth">Total</div>
               </div>
               <div className="cart-grid__body">
-                {/* <DisplayAllOrderProducts /> */}
                 <CartContents updateCartState={this.updateCartState} />
               </div>
             </div>
             <br />
             <div className="cart-modal-footer">
+              {this.state.cartError && (
+                <p className="error-msg">{this.state.cartError}</p>
+              )}
               <div className="cart-modal__grand-total">
                 Grand Total: ${(this.state.grandTotal / 100).toFixed(2)}
               </div>
@@ -64,7 +71,6 @@ export default class Cart extends React.Component {
                 type="submit"
                 name="completeCheckout"
                 className="btn btn--checkout cart-checkout"
-                disabled={!this.state.cartSize}
                 onClick={this.handleCheckout}
               >
                 Place Order
