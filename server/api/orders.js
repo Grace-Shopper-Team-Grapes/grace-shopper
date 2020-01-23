@@ -67,7 +67,6 @@ router.post('/', async (req, res, next) => {
     //IF NOT LOGGED IN:
     if (!req.user) {
       const cart = req.session.cart; // an empty obj
-      console.log(`the new age cart`, cart);
       const productId = +req.body.productId;
       const productQty = +req.body.productQty;
       const product = await Product.findByPk(productId);
@@ -188,7 +187,6 @@ router.post('/', async (req, res, next) => {
         });
 
         const cartProducts = await buildCartProducts(userCart.id);
-        console.log({userCart, orderProducts: cartProducts});
         res.json({userCart, orderProducts: cartProducts});
       } else {
         //OTHERWISE WE'RE OUT OF THE PRODUCT
