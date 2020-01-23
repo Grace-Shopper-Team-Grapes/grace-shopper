@@ -18,15 +18,16 @@ const SingleProductAddToCart = props => {
       <form
         className="pd-add-to-cart__form"
         onSubmit={e => {
-          handleAddToCart(e, id);
-          addToast(
-            `Added ${name} x${+document.getElementById(
-              'single-product-quantity'
-            ).value} to your Cart!`,
-            {
-              appearance: 'success'
-            }
-          );
+          handleAddToCart(e, id)
+            ? addToast(
+                `Added ${name} x${+document.getElementById(
+                  'single-product-quantity'
+                ).value} to your Cart!`,
+                {
+                  appearance: 'success'
+                }
+              )
+            : addToast(`Failed to add to cart`, {appearance: 'error'});
         }}
       >
         <input
@@ -34,8 +35,8 @@ const SingleProductAddToCart = props => {
           className="pd-add-to-cart__quantity text__input text__input--center"
           defaultValue="1"
           onChange={handleQtyChange}
-          id="single-product-quantity"
           name="quantity"
+          id="single-product-quantity"
         />
         <button type="submit" className="pd-add-to-cart__submit">
           <i className="fas fa-cart-plus" /> Add to Cart
