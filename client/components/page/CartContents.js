@@ -21,7 +21,6 @@ class CartContents extends React.Component {
 
   componentDidMount() {
     this.props.getAllOrderProducts();
-    this.setState({orderProducts: this.props.orderProducts});
   }
 
   componentDidUpdate() {
@@ -39,15 +38,11 @@ class CartContents extends React.Component {
   handleQuantityChange(event, productId) {
     const newQty = event.target.value;
 
-    this.setState(prevState => {
-      // I need to deep-copy the orderProducts array so I don't mutate the previous state.
-
-      return prevState.orderProducts.map(orderProduct => {
-        if (orderProduct.id === productId) {
-          orderProduct[event.target.name] = newQty;
-        }
-        return orderProduct;
-      });
+    this.props.orderProducts = this.props.orderProducts.map(orderProduct => {
+      if (orderProduct.id === productId) {
+        orderProduct[event.target.name] = newQty;
+      }
+      return orderProduct;
     });
   }
 
@@ -58,9 +53,9 @@ class CartContents extends React.Component {
     const qtyInputField = document.getElementById(
       `product-quantity-${productId}`
     );
-    console.log('quantity field is: ', qtyInputField);
+
     const newQty = +qtyInputField.value + 1;
-    console.log(`newQty is ${newQty} with type`, typeof newQty);
+
     this.props.updateOrderProduct(productId, newQty);
     qtyInputField.value = newQty;
   }
@@ -68,9 +63,8 @@ class CartContents extends React.Component {
     const qtyInputField = document.getElementById(
       `product-quantity-${productId}`
     );
-    console.log('quantity field is: ', qtyInputField);
+
     const newQty = +qtyInputField.value - 1;
-    console.log(`newQty is ${newQty} with type`, typeof newQty);
 
     // Remove the product if newQty is 0:
     if (!newQty) {
@@ -123,7 +117,7 @@ class CartContents extends React.Component {
               type="text"
               className="product-quantity__input text__input text__input--center"
               name="quantity"
-              defaultValue={item.quantity}
+              value={item.quantity}
               onChange={e => this.handleQuantityChange(e, item.id)}
               onBlur={e => this.handleQuantitySubmit(e, item.id)}
               id={`product-quantity-${item.id}`}

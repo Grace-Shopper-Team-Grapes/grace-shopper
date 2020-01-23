@@ -61,12 +61,12 @@ router.get('/', async (req, res, next) => {
 });
 
 // Cart - Add to cart
+// eslint-disable-next-line max-statements
 router.post('/', async (req, res, next) => {
   try {
     //IF NOT LOGGED IN:
     if (!req.user) {
       const cart = req.session.cart; // an empty obj
-      console.log(`the new age cart`, cart);
       const productId = +req.body.productId;
       const productQty = +req.body.productQty;
       const product = await Product.findByPk(productId);
@@ -117,8 +117,6 @@ router.post('/', async (req, res, next) => {
         });
         //UPDATE ORDER GRANDTOTAL
         cart.grandTotal = grandTotal;
-        console.log(`here is the sessionobj`, req.session);
-        console.log(`THE OBJ:`, req.session.cart);
         res.json(req.session.cart);
       } else {
         //OTHERWISE WE'RE OUT OF THE PRODUCT
@@ -126,8 +124,9 @@ router.post('/', async (req, res, next) => {
       }
     } else {
       //IF LOGGED IN:
-      const productId = req.body.productId;
-      const productQty = req.body.productQty;
+      const productId = +req.body.productId;
+      const productQty = +req.body.productQty;
+      console.log('in api orders, ', req.body.productQty);
 
       const product = await Product.findByPk(productId);
 
@@ -153,9 +152,9 @@ router.post('/', async (req, res, next) => {
             price: Number(product.price),
             quantity: Number(productQty)
           }
-        }).spread(function(orderProduct, created) {
+        }).spread(async function(orderProduct, created) {
           if (!created) {
-            orderProduct.update({
+            await orderProduct.update({
               quantity: Number(productQty) + orderProduct.quantity
             });
           }
@@ -180,7 +179,7 @@ router.post('/', async (req, res, next) => {
         });
 
         const cartProducts = await buildCartProducts(userCart.id);
-        console.log({userCart, orderProducts: cartProducts});
+
         res.json({userCart, orderProducts: cartProducts});
       } else {
         //OTHERWISE WE'RE OUT OF THE PRODUCT
@@ -205,7 +204,6 @@ router.put('/', async (req, res, next) => {
       if (product.inventory >= productQty) {
         cart.orderProducts.forEach(orderProduct => {
           if (+orderProduct.productId === +productId) {
-            console.log(`in the condition should update`);
             orderProduct.quantity = productQty;
           }
         });
