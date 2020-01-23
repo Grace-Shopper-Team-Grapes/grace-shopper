@@ -66,7 +66,7 @@ router.get('/', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
   try {
     //IF NOT LOGGED IN:
-    if (!req.user) {
+    if (!req.user && !req.body.special) {
       const cart = req.session.cart; // an empty obj
       const productId = +req.body.productId;
       const productQty = +req.body.productQty;

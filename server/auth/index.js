@@ -3,7 +3,36 @@ const User = require('../db/models/User');
 const Order = require('../db/models/Order');
 const OrderProduct = require('../db/models/OrderProduct');
 const {isSignedUp} = require('../api/routeProtections');
+const Product = require('../db/models/Product');
 module.exports = router;
+
+const buildCartProducts = async orderId => {
+  const allProducts = await Product.findAll({});
+  const cartItems = await OrderProduct.findAll({
+    where: {
+      orderId
+    },
+    order: [['createdAt', 'DESC']]
+  });
+
+  // let cartProduct = {};
+  let cartProductDetails = cartItems.map(orderProduct => {
+    let thisProduct = {};
+    allProducts.forEach(product => {
+      if (product.id === orderProduct.productId) {
+        thisProduct.id = product.id;
+        thisProduct.name = product.name;
+        thisProduct.slug = product.slug;
+        thisProduct.imageUrl = product.imageUrl;
+        thisProduct.price = orderProduct.price;
+        thisProduct.quantity = orderProduct.quantity;
+      }
+    });
+    return thisProduct;
+  });
+
+  return cartProductDetails;
+};
 
 router.post('/login', async (req, res, next) => {
   try {
@@ -14,57 +43,78 @@ router.post('/login', async (req, res, next) => {
       res.status(401).send('Wrong username and/or password');
     } else {
       //you have a user account
-
+      //unfortunately we don't have a session yet
       if (req.session.cart.orderProducts.length) {
-        const existingCart = await Order.findOne({
-          where: {
-            userId: user.id
+        //we have a cart, so need to merge.
+        //need to add to cart stuff from sessions
+        // req.session.cart.orderProducts.forEach(async orderProduct => {
+        //   await axios.post('/api/orders/', {
+        //     productId: orderProduct.id,
+        //     productQty: orderProduct.quantity,
+        //     special: user.id
+        //   });
+        // });
+        req.session.cart.orderProducts.forEach(async sessionOrderProduct => {
+          const productId = +sessionOrderProduct.id;
+          const productQty = +sessionOrderProduct.quantity;
+
+          const product = await Product.findByPk(productId);
+
+          const currentUser = req.user.id || req.body.special; //a special key used to merge sessioncart after login
+
+          // Check inventory levels before adding to cart
+          if (product.inventory >= productQty) {
+            // Get cart
+            const userCart = await Order.findOne({
+              where: {
+                userId: currentUser,
+                isPurchased: false
+              },
+              include: [{model: OrderProduct}]
+            });
+
+            //FIND OR CREATE ORDER PRODUCT
+            await OrderProduct.findOrCreate({
+              where: {orderId: userCart.id, productId},
+              defaults: {
+                orderId: userCart.id,
+                productId,
+                price: Number(product.price),
+                quantity: Number(productQty)
+              }
+            }).spread(async function(orderProduct, created) {
+              if (!created) {
+                await orderProduct.update({
+                  quantity: Number(productQty) + orderProduct.quantity
+                });
+              }
+            });
+
+            //GET ALL ORDERPRODUCTS
+            const allOrderProducts = await OrderProduct.findAll({
+              where: {
+                orderId: userCart.id
+              }
+            });
+
+            //ACCUMULATE GRAND TOTAL
+            let grandTotal = 0;
+            allOrderProducts.forEach(orderProduct => {
+              grandTotal += orderProduct.price * orderProduct.quantity;
+            });
+
+            //UPDATE ORDER GRANDTOTAL
+            await userCart.update({
+              grandTotal: grandTotal
+            });
+
+            const cartProducts = await buildCartProducts(userCart.id);
+
+            res.json({userCart, orderProducts: cartProducts});
           }
         });
-
-        const existingOrderProducts = await OrderProduct.findAll({
-          where: {
-            orderId: existingCart.id
-          }
-        });
-        //now we have all the orderProducts
-
-        const mergedArray = [];
-
-        existingOrderProducts.forEach(existingOrderProduct => {
-          req.session.cart.orderProducts.forEach(sessionOrderProduct => {
-            if (
-              existingOrderProduct.productId === sessionOrderProduct.productId
-            ) {
-              const newQuantity =
-                existingOrderProduct.quantity + sessionOrderProduct.quantity;
-              existingOrderProduct.quantity = newQuantity;
-              mergedArray.push(existingOrderProduct);
-            }
-          });
-          mergedArray.push(existingOrderProduct);
-        });
-
-        // mergedArray.forEach(async (orderProduct) => {
-        //   await OrderProduct.update({
-        //     orderProduct
-        //   },
-        //   {
-
-        //   })
-        // })
-        await OrderProduct.update(
-          {
-            mergedArray
-          },
-          {
-            where: {
-              orderId: existingOrderProducts.orderId,
-              isPurchased: false
-            }
-          }
-        );
       }
+      //otherwise we do not have a cart, so don't need to merge. let add tocart do its own thing.
 
       req.login(user, err => (err ? next(err) : res.json(user)));
     }
