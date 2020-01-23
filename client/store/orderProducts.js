@@ -47,7 +47,7 @@ const removedOrderProduct = orderProducts => {
 export const getAllOrderProducts = () => async dispatch => {
   try {
     const {data} = await axios.get('/api/orders');
-    console.log(`data? `, data);
+
     dispatch(gotAllOrderProducts(data.orderProducts));
   } catch (err) {
     console.error(err);

@@ -11,8 +11,7 @@ import {
   DisplayCategories,
   DisplayWhiteWines,
   DisplayRedWines,
-  DisplaySingleProduct,
-  DisplayAllOrderProducts
+  SingleProduct
 } from './components';
 import {me} from './store';
 import Homepage from './components/page/Homepage';
@@ -32,14 +31,13 @@ class Routes extends Component {
     return (
       <Switch>
         {/* Routes placed here are available to all visitors */}
-        <Route path="/products/:slug" component={DisplaySingleProduct} />
+        <Route path="/products/:slug" component={SingleProduct} />
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
         <Route path="/products" component={AllProducts} />
         <Route path="/categories/white" component={DisplayWhiteWines} />
         <Route path="/categories/red" component={DisplayRedWines} />
         <Route path="/categories" component={DisplayCategories} />
-        <Route path="/orderProducts" component={DisplayAllOrderProducts} />
         <Route path="/account" component={DisplayAccountPage} />
 
         <Route path="/" exact component={Homepage} />
