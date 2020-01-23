@@ -1,6 +1,6 @@
 import React from 'react';
 import CartContents from './CartContents';
-
+import history from '../../../client/history';
 import axios from 'axios';
 
 export default class Cart extends React.Component {
@@ -28,7 +28,11 @@ export default class Cart extends React.Component {
   async handleCheckout() {
     try {
       console.log('in handleCheckout, state ===', this.state);
-      await axios.post('/api/orders/checkout');
+      let isGuest = await axios.post('/api/orders/checkout');
+      if (isGuest.data.flag) {
+        history.push('/login');
+        this.closeCart();
+      }
     } catch (error) {
       console.error(error);
     }

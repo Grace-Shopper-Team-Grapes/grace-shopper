@@ -275,6 +275,13 @@ router.delete('/', async (req, res, next) => {
           cart.orderProducts.splice(toSplice);
         }
       });
+      //above deletes all only when clicked on the first.
+      //deletes all nomatter where clicked
+      // let newArr = cart.orderProducts.filter((orderProduct) => {
+      //   if (!+orderProduct.id === +productId) return orderProduct
+      // })
+      // cart.orderProducts = newArr
+
       res.json(cart);
     } else {
       // Get cart
@@ -324,72 +331,73 @@ router.get('/', async (req, res, next) => {
 router.post('/checkout', async (req, res, next) => {
   try {
     if (!req.user) {
-      res.redirect('/login');
-    }
-    //CHECK IF IN STOCK
-    const order = await Order.findOne({
-      where: {
-        userId: req.user.id,
-        isPurchased: false
-      }
-    });
-    const allProducts = await Product.findAll({});
-    const allRespectiveOrderProducts = await OrderProduct.findAll({
-      where: {
-        orderId: order.id
-      }
-    });
-
-    let allProductsWantedAvailable = true; //a flag
-    const namesAndInventory = {}; //holds names and inventory
-    allProducts.forEach(product => {
-      namesAndInventory[product.name] = product.inventory; //gets entire arsenal
-      allRespectiveOrderProducts.forEach(orderProduct => {
-        if (product.id === orderProduct.productId) {
-          if (orderProduct.quantity > product.inventory) {
-            allProductsWantedAvailable = false;
-          }
+      res.json({flag: true});
+    } else {
+      //CHECK IF IN STOCK
+      const order = await Order.findOne({
+        where: {
+          userId: req.user.id,
+          isPurchased: false
         }
       });
-    });
-    //IF ALL PRODUCTS WANTED ARE AVAILABLE
-    if (allProductsWantedAvailable) {
-      //NEED TO CHANGE INVENTORY OF PRODUCTS
+      const allProducts = await Product.findAll({});
+      const allRespectiveOrderProducts = await OrderProduct.findAll({
+        where: {
+          orderId: order.id
+        }
+      });
+
+      let allProductsWantedAvailable = true; //a flag
+      const namesAndInventory = {}; //holds names and inventory
       allProducts.forEach(product => {
+        namesAndInventory[product.name] = product.inventory; //gets entire arsenal
         allRespectiveOrderProducts.forEach(orderProduct => {
           if (product.id === orderProduct.productId) {
-            namesAndInventory[product.name] =
-              namesAndInventory[product.name] - orderProduct.quantity;
+            if (orderProduct.quantity > product.inventory) {
+              allProductsWantedAvailable = false;
+            }
           }
         });
       });
-
-      allProducts.forEach(async product => {
-        await product.update({
-          inventory: namesAndInventory[product.name]
+      //IF ALL PRODUCTS WANTED ARE AVAILABLE
+      if (allProductsWantedAvailable) {
+        //NEED TO CHANGE INVENTORY OF PRODUCTS
+        allProducts.forEach(product => {
+          allRespectiveOrderProducts.forEach(orderProduct => {
+            if (product.id === orderProduct.productId) {
+              namesAndInventory[product.name] =
+                namesAndInventory[product.name] - orderProduct.quantity;
+            }
+          });
         });
-      });
 
-      //CHANGE ISPURCHASED STATUS
-      await order.update({
-        isPurchased: true
-      });
+        allProducts.forEach(async product => {
+          await product.update({
+            inventory: namesAndInventory[product.name]
+          });
+        });
 
-      //Need a new order now with default properties
-      await Order.create({userId: req.user.id});
+        //CHANGE ISPURCHASED STATUS
+        await order.update({
+          isPurchased: true
+        });
 
-      //redirect below to a checkout confirmation page
-      res.sendStatus(202);
-    } else {
-      //BLOCK ORDER AND SEND ERROR
+        //Need a new order now with default properties
+        await Order.create({userId: req.user.id});
 
-      for (let name in namesAndInventory) {
-        if (namesAndInventory.hasOwnProperty(name)) {
-          throw new Error(
-            `\nthis product: ${name}, only has this much inventory: ${
-              namesAndInventory[name]
-            }`
-          );
+        //redirect below to a checkout confirmation page
+        res.sendStatus(202);
+      } else {
+        //BLOCK ORDER AND SEND ERROR
+
+        for (let name in namesAndInventory) {
+          if (namesAndInventory.hasOwnProperty(name)) {
+            throw new Error(
+              `\nthis product: ${name}, only has this much inventory: ${
+                namesAndInventory[name]
+              }`
+            );
+          }
         }
       }
     }
