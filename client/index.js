@@ -6,6 +6,8 @@ import history from './history';
 import store from './store';
 import App from './app';
 
+import {ToastProvider} from 'react-toast-notifications';
+
 // let's bring in our styles
 import 'normalize.css/normalize.css';
 import '../public/styles/main.scss';
@@ -16,7 +18,13 @@ import './socket';
 ReactDOM.render(
   <Provider store={store}>
     <Router history={history}>
-      <App />
+      <ToastProvider
+        autoDismiss
+        autoDismissTimeout={4000}
+        placement="top-center"
+      >
+        <App />
+      </ToastProvider>
     </Router>
   </Provider>,
   document.getElementById('app')
